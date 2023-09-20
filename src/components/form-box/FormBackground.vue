@@ -9,7 +9,7 @@
 <style lang="scss" scoped>
 .form-box__background {
   height: 468px;
-  width: 228px;
+  min-width: 228px;
   background: #ffe500;
   padding: 24px;
   display: flex;

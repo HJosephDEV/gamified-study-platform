@@ -23,6 +23,8 @@ import FormBackground from "./FormBackground.vue";
 
   .form-box__content {
     padding: 24px;
+    display: flex;
+    flex-grow: 1;
   }
 }
 

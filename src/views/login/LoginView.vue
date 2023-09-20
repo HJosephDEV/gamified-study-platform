@@ -1,11 +1,14 @@
 <template>
   <div id="login-view__container">
-    <FormBox />
+    <FormBox>
+      <LoginForm />
+    </FormBox>
   </div>
 </template>
 
 <script lang="ts" setup>
 import FormBox from "@/components/form-box/FormBox.vue";
+import LoginForm from "./components/LoginForm.vue";
 </script>
 
 <style lang="scss" scoped>

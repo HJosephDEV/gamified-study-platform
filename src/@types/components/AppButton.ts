@@ -1,1 +1,1 @@
-export type AppButtonProps = { isFull: boolean };
+export type AppButtonProps = { isFull?: boolean };

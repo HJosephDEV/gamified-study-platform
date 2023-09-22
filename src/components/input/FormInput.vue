@@ -4,6 +4,7 @@
     <input
       :class="[{ 'is-invalid': !inputStatus }]"
       :value="inputValue"
+      :placeholder="inputPlaceholder"
       @input="updateInputValue"
     />
     <span v-if="!inputStatus">{{ inputFeedback }}</span>
@@ -13,7 +14,7 @@
 <script lang="ts" setup>
 import { type InputProps, type EmitsProps } from "@/@types/components/FormInput";
 
-const { inputLabel, inputValue, inputFeedback, inputStatus } = withDefaults(
+const { inputLabel, inputValue, inputFeedback, inputStatus, inputPlaceholder } = withDefaults(
   defineProps<InputProps>(),
   {
     inputStatus: true
@@ -29,6 +30,7 @@ const updateInputValue = (e: Event) => {
 
 <style lang="scss" scoped>
 .form-input__container {
+  width: 100%;
   display: flex;
   flex-direction: column;
 
@@ -50,6 +52,9 @@ const updateInputValue = (e: Event) => {
     outline: none;
     margin-top: 4px;
 
+    &::placeholder {
+      color: #a8a8a8;
+    }
     &.is-invalid {
       border-color: #ff6363;
     }

@@ -3,6 +3,7 @@ export type InputProps = {
   inputValue: string | number | null;
   inputFeedback?: string;
   inputStatus?: boolean;
+  inputPlaceholder?: string;
 };
 
 export type EmitsProps = {

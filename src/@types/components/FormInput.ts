@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 export type InputProps = {
   inputLabel: string;
   inputValue: string | number | null;

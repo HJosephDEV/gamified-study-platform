@@ -27,8 +27,11 @@
 
 @media (max-width: 820px) {
   .form-box__background {
+    min-width: 0;
     width: 100%;
-    height: 135px;
+    height: 100px;
+    padding: 0 24px;
+    align-items: center;
     border-bottom-left-radius: 0px;
     border-top-right-radius: 6px;
 

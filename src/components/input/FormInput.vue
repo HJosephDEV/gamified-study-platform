@@ -38,6 +38,7 @@ const updateInputValue = (e: Event) => {
     color: #fff;
     font-size: 10px;
     font-weight: 400;
+    line-height: normal;
   }
 
   input {
@@ -45,12 +46,14 @@ const updateInputValue = (e: Event) => {
     padding: 6px;
     border-radius: 5px;
     background: #fff;
-    border: 1px solid #fff;
+    border: 2px solid #fff;
+    height: fit-content;
     color: #212121;
-    font-size: 9px;
+    font-size: 12px;
+    line-height: normal;
     font-weight: 600;
-    outline: none;
     margin-top: 4px;
+    outline: none;
 
     &::placeholder {
       color: #a8a8a8;

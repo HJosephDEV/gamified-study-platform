@@ -16,16 +16,13 @@
         />
       </div>
       <AppButton is-full>Entrar</AppButton>
-      <div class="login-form__register-link">
-        <router-link to="/register">
-          <button
-            class="login-form__register-button"
-            type="button"
-          >
-            Não possui conta? <b>Cadastre-se</b>
-          </button>
-        </router-link>
-      </div>
+      <TextButton
+        class="login-form__register-link"
+        to="/register"
+      >
+        <template #text>Não possui conta? </template>
+        <template #bold>Cadastre-se</template>
+      </TextButton>
     </div>
   </div>
 </template>
@@ -34,6 +31,7 @@
 import { ref } from "vue";
 import FormInput from "@/components/form-input/FormInput.vue";
 import AppButton from "@/components/app-button/AppButton.vue";
+import TextButton from "@/components/text-button/TextButton.vue";
 import InvalidAlert from "./InvalidAlert.vue";
 
 const fields = ref({
@@ -57,6 +55,22 @@ const fields = ref({
   }
 });
 </script>
+
+<style lang="scss">
+@media (max-width: 362px) {
+  .login-form__wrapper {
+    .login-form__container {
+      .login-form__register-link {
+        a button {
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+        }
+      }
+    }
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 .login-form__wrapper {
@@ -86,54 +100,7 @@ const fields = ref({
     }
 
     .login-form__register-link {
-      display: flex;
       margin-top: 16px;
-      justify-content: center;
-
-      a {
-        text-decoration: none !important;
-      }
-
-      .login-form__register-button {
-        background: transparent;
-        border: 0;
-        outline: 0;
-        cursor: pointer;
-
-        color: #fff;
-        font-weight: 500;
-        font-size: 10px;
-        line-height: normal;
-
-        b {
-          background: linear-gradient(to right, #ffe500 100%, #ffe500 100%);
-          -webkit-text-fill-color: transparent;
-          -webkit-background-clip: text;
-
-          font-size: 10px;
-          font-weight: 700;
-        }
-
-        @keyframes textShine {
-          0% {
-            background-position: 0% 50%;
-          }
-          100% {
-            background-position: 100% 50%;
-          }
-        }
-
-        &:hover {
-          b {
-            background: linear-gradient(to right, #fff 10%, #ffe500 40%, #0190cd 70%, #764ada 80%);
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            -webkit-background-clip: text;
-            background-size: 500% auto;
-            animation: textShine 0.3s ease infinite both;
-          }
-        }
-      }
     }
   }
 }
@@ -144,10 +111,10 @@ const fields = ref({
       width: 100%;
 
       .login-form__register-link {
-        .login-form__register-button {
+        a {
           display: flex;
           align-items: center;
-          flex-direction: column;
+          flex-direction: column !important;
         }
       }
     }

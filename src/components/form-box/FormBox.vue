@@ -19,6 +19,7 @@ import FormBackground from "./FormBackground.vue";
   max-width: 820px;
   background: #212121;
   border-radius: 6px;
+  border: 1px solid #ffe500;
   display: flex;
 
   .form-box__content {

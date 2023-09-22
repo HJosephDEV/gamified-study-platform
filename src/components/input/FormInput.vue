@@ -3,6 +3,7 @@
     <label>{{ inputLabel }}</label>
     <input
       :class="[{ 'is-invalid': !inputStatus }]"
+      :type="inputType"
       :value="inputValue"
       :placeholder="inputPlaceholder"
       @input="updateInputValue"
@@ -14,12 +15,11 @@
 <script lang="ts" setup>
 import { type InputProps, type EmitsProps } from "@/@types/components/FormInput";
 
-const { inputLabel, inputValue, inputFeedback, inputStatus, inputPlaceholder } = withDefaults(
-  defineProps<InputProps>(),
-  {
+const { inputLabel, inputValue, inputType, inputFeedback, inputStatus, inputPlaceholder } =
+  withDefaults(defineProps<InputProps>(), {
+    inputType: "text",
     inputStatus: true
-  }
-);
+  });
 
 const emit = defineEmits<EmitsProps>();
 
@@ -43,7 +43,7 @@ const updateInputValue = (e: Event) => {
 
   input {
     width: 100%;
-    padding: 6px;
+    padding: 6px 12px;
     border-radius: 5px;
     background: #fff;
     border: 2px solid #fff;

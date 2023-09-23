@@ -8,7 +8,7 @@
       :placeholder="inputPlaceholder"
       @input="updateInputValue"
     />
-    <span v-if="!inputStatus">{{ inputFeedback }}</span>
+    <span v-if="!inputStatus && !!inputFeedback">{{ inputFeedback }}</span>
   </div>
 </template>
 
@@ -16,10 +16,7 @@
 import { type InputProps, type EmitsProps } from "@/@types/components/FormInput";
 
 const { inputLabel, inputValue, inputType, inputFeedback, inputStatus, inputPlaceholder } =
-  withDefaults(defineProps<InputProps>(), {
-    inputType: "text",
-    inputStatus: true
-  });
+  defineProps<InputProps>();
 
 const emit = defineEmits<EmitsProps>();
 

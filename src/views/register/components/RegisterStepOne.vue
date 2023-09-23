@@ -3,12 +3,13 @@
     <h1 class="register-step-one__title">Cadastro</h1>
     <div class="register-step-one__form">
       <FormInput
-        v-for="[key, fieldInfo] in Object.entries(fields)"
+        v-for="[key, fieldInfo] in Object.entries(registerFields)"
         :key="key"
         :input-label="fieldInfo.label"
         :input-value="fieldInfo.value"
         :input-type="fieldInfo.type"
         :input-status="fieldInfo.status"
+        :input-feedback="fieldInfo.feedback"
         :input-placeholder="fieldInfo.placeholder"
         @update:input-value="(newValue) => (fieldInfo.value = newValue)"
       />
@@ -18,18 +19,95 @@
         <template #text>Já possui conta? Voltar para </template>
         <template #bold>Login</template>
       </TextButton>
-      <AppButton class="register-step-one__next-button">Próximo</AppButton>
+      <AppButton
+        class="register-step-one__next-button"
+        @click="goToNextStep"
+      >
+        Próximo
+      </AppButton>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { storeToRefs } from "pinia";
+
+import { useRegisterStore } from "@/stores/RegisterStore";
+import { isEmail } from "@/utils";
+import type { RegisterFields } from "@/@types/stores/RegisterStore";
+
 import FormInput from "@/components/form-input/FormInput.vue";
 import AppButton from "@/components/app-button/AppButton.vue";
 import TextButton from "@/components/text-button/TextButton.vue";
+import { hasEspecialCaracter } from "../../../utils/index";
 
-const fields = ref({
+const store = useRegisterStore();
+const { registerFields } = storeToRefs(store);
+const { changeStep } = store;
+
+const checkRequiredField = (registerFieldsParam: RegisterFields, key: string) => {
+  const status = !!registerFieldsParam[key].value;
+  registerFieldsParam[key].status = status;
+  registerFieldsParam[key].feedback = status ? "" : "Campo obrigatório";
+
+  return status;
+};
+
+const checkEqualPasswords = (registerFieldsParam: RegisterFields) => {
+  if (!registerFieldsParam.password.value || !registerFieldsParam.retypePassword.value) return true;
+
+  const isEqual: boolean =
+    registerFieldsParam.password.value === registerFieldsParam.retypePassword.value;
+
+  registerFieldsParam.password.status = isEqual;
+  registerFieldsParam.password.feedback = !isEqual ? "As senhas não são iguais" : "";
+  registerFieldsParam.retypePassword.status = isEqual;
+  registerFieldsParam.retypePassword.feedback = !isEqual ? "As senhas não são iguais" : "";
+
+  return isEqual;
+};
+
+const checkEmail = (registerFieldsParam: RegisterFields, key: string) => {
+  if (!registerFieldsParam[key].value) return;
+
+  const isValidEmail: boolean = isEmail(registerFieldsParam[key].value);
+  registerFieldsParam[key].status = isValidEmail;
+  registerFieldsParam[key].feedback = isValidEmail ? "" : "E-mail inválido";
+
+  return isValidEmail;
+};
+
+const checkUsername = (registerFieldsParam: RegisterFields, key: string) => {
+  if (!registerFieldsParam[key].value) return;
+
+  const isValidUsername: boolean = !hasEspecialCaracter(registerFieldsParam[key].value);
+  registerFieldsParam[key].status = isValidUsername;
+  registerFieldsParam[key].feedback = isValidUsername
+    ? ""
+    : "Não utilize caracteres espcecias. Ex: !,@,#, etc...";
+
+  return isValidUsername;
+};
+const validateFields = () => {
+  let isValid = true;
+  for (const key in registerFields.value) {
+    for (const action of registerFields.value[key].validations) {
+      let validation = action(registerFields.value, key);
+      isValid = isValid && !validation ? false : isValid;
+    }
+  }
+
+  return isValid;
+};
+
+const goToNextStep = () => {
+  const isValid = validateFields();
+  if (!isValid) return;
+
+  changeStep(2);
+};
+
+const fields = {
   firstname: {
     label: "Nome",
     value: "",
@@ -37,7 +115,7 @@ const fields = ref({
     placeholder: "Digite aqui",
     status: true,
     feedback: "",
-    validations: []
+    validations: [checkRequiredField]
   },
   lastname: {
     label: "Sobrenome",
@@ -46,7 +124,7 @@ const fields = ref({
     placeholder: "Digite aqui",
     status: true,
     feedback: "",
-    validations: []
+    validations: [checkRequiredField]
   },
   username: {
     label: "Nome de usuário",
@@ -55,7 +133,7 @@ const fields = ref({
     placeholder: "Digite aqui",
     status: true,
     feedback: "",
-    validations: []
+    validations: [checkRequiredField, checkUsername]
   },
   email: {
     label: "E-mail",
@@ -64,7 +142,7 @@ const fields = ref({
     placeholder: "Digite aqui",
     status: true,
     feedback: "",
-    validations: []
+    validations: [checkRequiredField, checkEmail]
   },
   password: {
     label: "Senha",
@@ -73,7 +151,7 @@ const fields = ref({
     placeholder: "********",
     status: true,
     feedback: "",
-    validations: []
+    validations: [checkRequiredField]
   },
   retypePassword: {
     label: "Repita a senha",
@@ -82,9 +160,12 @@ const fields = ref({
     placeholder: "********",
     status: true,
     feedback: "",
-    validations: []
+    validations: [checkRequiredField, checkEqualPasswords]
   }
-});
+};
+
+registerFields.value =
+  Object.keys(registerFields.value).length === 0 ? { ...fields } : registerFields.value;
 </script>
 
 <style lang="scss" scoped>

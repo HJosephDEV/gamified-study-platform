@@ -14,13 +14,21 @@
         />
       </div>
 
-      <AppButton is-full>Cadastrar</AppButton>
+      <AppButton
+        is-full
+        @click="register"
+      >
+        Cadastrar
+      </AppButton>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { inject } from "vue";
+
 import { useRegisterStore } from "@/stores/RegisterStore";
+import type { ProviderAppProps } from "@/@types/providers/App";
 
 import AppButton from "@/components/app-button/AppButton.vue";
 import BackButton from "@/components/back-button/BackButton.vue";
@@ -29,6 +37,11 @@ const registerStore = useRegisterStore();
 const { changeStep } = registerStore;
 
 const backToStepOne = () => changeStep(1);
+
+const { $router } = inject<ProviderAppProps>("app") || ({} as ProviderAppProps);
+const register = () => {
+  $router.push({ name: "home" });
+};
 </script>
 
 <style lang="scss">

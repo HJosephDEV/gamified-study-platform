@@ -1,6 +1,8 @@
 import "./assets/scss/reset.scss";
 import "./assets/scss/main.scss";
 
+import type { ProviderAppProps } from "./@types/providers/App";
+
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 
@@ -16,6 +18,6 @@ app.use(router);
 
 app.mount("#app");
 
-// globais
-
-// app.config.globalProperties.$axios = axios;
+app.provide<ProviderAppProps>("app", {
+  $router: router
+});

@@ -8,6 +8,7 @@
       section-title="Módulos disponíveis"
       :module-in-progress-list="modulesInProgressList"
     />
+    <RankingList />
   </main>
 </template>
 
@@ -15,6 +16,7 @@
 import { ref } from "vue";
 
 import ModulesSection from "./components/ModulesSection.vue";
+import RankingList from "./components/ranking-list/RankingList.vue";
 
 const modulesInProgressList = ref([
   { id: 1, name: "Variavéis" },

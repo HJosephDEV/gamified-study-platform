@@ -7,21 +7,27 @@
           alt="Foto de perfil"
         />
       </div>
+
       <div class="ranking-item__profile-infos">
-        <span class="ranking-item__profile-name">haasedevv</span>
-        <span class="ranking-item__profile-exp">1200 xp</span>
+        <span class="ranking-item__profile-name">{{ username }}</span>
+        <span class="ranking-item__profile-exp">{{ exp }} xp</span>
       </div>
     </div>
 
     <div class="ranking-item__profile-ranking-container">
-      <span>rank 100</span>
+      <span>rank {{ rank }}</span>
+
       <AppIcon name="trophy" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import type { RankingItemProps } from "@/@types/components/RankingItem";
+
 import AppIcon from "@/components/app-icon/AppIcon.vue";
+
+const { username, exp, rank } = defineProps<RankingItemProps>();
 </script>
 
 <style lang="scss" scoped>
@@ -52,12 +58,16 @@ import AppIcon from "@/components/app-icon/AppIcon.vue";
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      max-width: 55%;
 
       .ranking-item__profile-name {
         color: #000;
         font-size: 14px;
         font-weight: 600;
         line-height: normal;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
       }
 
       .ranking-item__profile-exp {

@@ -58,4 +58,14 @@ const { sectionTitle, moduleInProgressList } = defineProps<ModulesSectionProps>(
     }
   }
 }
+
+@media (max-width: 680px) {
+  .modules-section__wrapper {
+    .modules-section__container {
+      .modules-section__modules {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+}
 </style>

@@ -22,6 +22,8 @@ const redirectToModule = (id: number) => {
 <style lang="scss">
 .section-module__container {
   .section-module__icon {
+    min-width: 18px;
+    min-height: 18px;
     width: 18px;
     height: 18px;
 
@@ -64,6 +66,7 @@ const redirectToModule = (id: number) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  overflow: hidden;
   cursor: pointer;
   transition:
     background 0.6s ease,
@@ -75,6 +78,9 @@ const redirectToModule = (id: number) => {
     font-weight: 600;
     line-height: normal;
     transition: color 0.6s ease;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   &:hover {

@@ -3,6 +3,7 @@ import DashboardView from "@/views/dashboard/DashboardView.vue";
 import LoginView from "@/views/login/LoginView.vue";
 import RegisterView from "@/views/register/RegisterView.vue";
 import SettingsView from "@/views/settings/SettingsView.vue";
+import TasksView from "@/views/tasks/TasksView.vue";
 import LoggedLayout from "@/layouts/logged-layout/LoggedLayout.vue";
 
 const routes: Array<RouteRecordRaw> = [
@@ -28,6 +29,22 @@ const routes: Array<RouteRecordRaw> = [
     path: "/settings",
     name: "settings",
     component: SettingsView,
+    meta: {
+      layout: LoggedLayout
+    }
+  },
+  {
+    path: "/module/:moduleId/tasks",
+    name: "module",
+    component: TasksView,
+    meta: {
+      layout: LoggedLayout
+    }
+  },
+  {
+    path: "/module/:moduleId/task/:taskId",
+    name: "task",
+    component: "",
     meta: {
       layout: LoggedLayout
     }

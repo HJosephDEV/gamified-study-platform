@@ -1,6 +1,9 @@
 <template>
   <div class="task-card__container">
-    <BackButton class="task-card__back-button" />
+    <BackButton
+      class="task-card__back-button"
+      @click="redirecToHome"
+    />
     <h2 class="task-card__title">Tarefas</h2>
     <ul class="task-card__task-list">
       <ModuleTask
@@ -15,9 +18,16 @@
 </template>
 
 <script lang="ts" setup>
+import { inject } from "vue";
+import type { ProviderAppProps } from "@/@types/providers/App";
+
 import AppButton from "@/components/app-button/AppButton.vue";
 import BackButton from "@/components/back-button/BackButton.vue";
 import ModuleTask from "../task/ModuleTask.vue";
+
+const { $router } = inject<ProviderAppProps>("app") || ({} as ProviderAppProps);
+
+const redirecToHome = () => $router.push({ name: "dashboard" });
 </script>
 
 <style lang="scss" scoped>

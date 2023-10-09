@@ -29,7 +29,7 @@ const { percentage } = defineProps<ProgressBarProps>();
 
     &,
     span {
-      font-size: 8px;
+      font-size: 12px;
       font-weight: 600;
       line-height: normal;
     }

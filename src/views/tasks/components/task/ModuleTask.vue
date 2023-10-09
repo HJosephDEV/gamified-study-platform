@@ -3,7 +3,7 @@
     class="module-task__container ellipsis"
     @click="redirectToTask"
   >
-    {{ taskName }} tokyo tokyo tokyo tokyo tokyo tokyo tokyo tokyo tokyo tokyo tokyo tokyo
+    {{ taskName }}
   </li>
 </template>
 
@@ -31,6 +31,7 @@ const redirectToTask = () =>
   border-radius: 6px;
   background: linear-gradient(100deg, #fff 42.44%, #ffe500 66.39%);
   cursor: pointer;
+  transition: all 0.5s ease;
 
   color: #212121;
   font-family: Poppins;
@@ -43,6 +44,17 @@ const redirectToTask = () =>
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+  }
+
+  &:hover {
+    background: #ffe500;
+    animation: taskHover 0.8s linear infinite;
+  }
+  @keyframes taskHover {
+    100% {
+      background: #ffe500;
+      opacity: 0.6;
+    }
   }
 }
 </style>

@@ -1,13 +1,32 @@
 <template>
   <div class="task-card__container">
-    <BackButton class="task-card__back-button"> Voltar para módulos </BackButton>
+    <BackButton
+      class="task-card__back-button"
+      @click="backToModule"
+    >
+      Voltar para módulos
+    </BackButton>
     <h2 class="task-card__title">Tokyo</h2>
     <slot />
   </div>
 </template>
 
 <script lang="ts" setup>
+import { inject } from "vue";
+import type { ProviderAppProps } from "@/@types/providers/App";
+
 import BackButton from "@/components/back-button/BackButton.vue";
+
+const { $router } = inject<ProviderAppProps>("app") || ({} as ProviderAppProps);
+
+const backToModule = () => {
+  $router.push({
+    name: "module",
+    params: {
+      moduleId: $router.currentRoute.value.params.moduleId
+    }
+  });
+};
 </script>
 
 <style lang="scss" scoped>

@@ -60,4 +60,12 @@ const redirecToHome = () => $router.push({ name: "dashboard" });
     margin: 24px 0 36px;
   }
 }
+
+@media (max-width: 550px) {
+  .task-card__container {
+    .task-card__task-list {
+      grid-template-columns: 1fr;
+    }
+  }
+}
 </style>

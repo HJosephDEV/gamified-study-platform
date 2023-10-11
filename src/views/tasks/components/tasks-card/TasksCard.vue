@@ -3,7 +3,9 @@
     <BackButton
       class="task-card__back-button"
       @click="redirecToHome"
-    />
+    >
+      Voltar
+    </BackButton>
     <h2 class="task-card__title">Tarefas</h2>
     <ul class="task-card__task-list">
       <ModuleTask

@@ -1,7 +1,7 @@
 <template>
   <div class="back-button-component__container">
     <ChevronsDownIcon class="back-button-component__icon" />
-    <span>Voltar</span>
+    <span><slot /></span>
   </div>
 </template>
 

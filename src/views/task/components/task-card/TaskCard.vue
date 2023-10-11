@@ -1,6 +1,6 @@
 <template>
   <div class="task-card__container">
-    <BackButton class="task-card__back-button" />
+    <BackButton class="task-card__back-button"> Voltar para módulos </BackButton>
     <h2 class="task-card__title">Tokyo</h2>
     <slot />
   </div>

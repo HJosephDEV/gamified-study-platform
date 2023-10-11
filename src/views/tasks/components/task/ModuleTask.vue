@@ -48,12 +48,12 @@ const redirectToTask = () =>
 
   &:hover {
     background: #ffe500;
-    animation: taskHover 0.8s linear infinite;
+    animation: taskHover 0.5s linear infinite;
   }
   @keyframes taskHover {
     100% {
       background: #ffe500;
-      opacity: 0.6;
+      opacity: 0.4;
     }
   }
 }

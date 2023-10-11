@@ -4,6 +4,7 @@ import LoginView from "@/views/login/LoginView.vue";
 import RegisterView from "@/views/register/RegisterView.vue";
 import SettingsView from "@/views/settings/SettingsView.vue";
 import TasksView from "@/views/tasks/TasksView.vue";
+import TaskView from "@/views/task/TaskView.vue";
 import LoggedLayout from "@/layouts/logged-layout/LoggedLayout.vue";
 
 const routes: Array<RouteRecordRaw> = [
@@ -44,7 +45,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/module/:moduleId/task/:taskId",
     name: "task",
-    component: "",
+    component: TaskView,
     meta: {
       layout: LoggedLayout
     }

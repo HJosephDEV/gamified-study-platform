@@ -2,20 +2,12 @@
   <div class="task-card__container">
     <BackButton
       class="task-card__back-button"
-      @click="redirecToHome"
+      @click="backToModule"
     >
-      Voltar
+      Voltar para módulos
     </BackButton>
-    <h2 class="task-card__title">Tarefas</h2>
-    <ul class="task-card__task-list">
-      <ModuleTask
-        v-for="(moduleTask, index) in 5"
-        :key="`module-task-${index}`"
-        :task-id="1"
-        task-name="Tokyo"
-      />
-    </ul>
-    <AppButton is-full>Ver mais</AppButton>
+    <h2 class="task-card__title">Tokyo</h2>
+    <slot />
   </div>
 </template>
 
@@ -23,13 +15,18 @@
 import { inject } from "vue";
 import type { ProviderAppProps } from "@/@types/providers/App";
 
-import AppButton from "@/components/app-button/AppButton.vue";
 import BackButton from "@/components/back-button/BackButton.vue";
-import ModuleTask from "../task/ModuleTask.vue";
 
 const { $router } = inject<ProviderAppProps>("app") || ({} as ProviderAppProps);
 
-const redirecToHome = () => $router.push({ name: "dashboard" });
+const backToModule = () => {
+  $router.push({
+    name: "module",
+    params: {
+      moduleId: $router.currentRoute.value.params.moduleId
+    }
+  });
+};
 </script>
 
 <style lang="scss" scoped>
@@ -52,22 +49,7 @@ const redirecToHome = () => $router.push({ name: "dashboard" });
     font-size: 16px;
     font-weight: 600;
     line-height: normal;
-    margin-top: 24px;
-  }
-
-  .task-card__task-list {
-    display: grid;
-    gap: 36px;
-    grid-template-columns: 1fr 1fr;
-    margin: 24px 0 36px;
-  }
-}
-
-@media (max-width: 550px) {
-  .task-card__container {
-    .task-card__task-list {
-      grid-template-columns: 1fr;
-    }
+    margin: 24px 0;
   }
 }
 </style>

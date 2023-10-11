@@ -10,7 +10,9 @@
     <BackButton
       class="register-step-two__back-button"
       @click="backToStepOne"
-    />
+    >
+      voltar
+    </BackButton>
 
     <h1 class="register-step-two__title">Escolha seu avatar</h1>
 

@@ -33,10 +33,10 @@ import AppDropdown from "@/components/app-dropdown/AppDropdown.vue";
 
 const { $router } = inject<ProviderAppProps>("app") || ({} as ProviderAppProps);
 
-const redirectToSettings = () => $router.push({ name: "settings" });
 const optionList = ref([
-  { label: "Configurações", event: () => redirectToSettings() },
-  { label: "Sair", event: () => {} }
+  { label: "Meus módulos", event: () => $router.push({ name: "dashboard" }) },
+  { label: "Configurações", event: () => $router.push({ name: "settings" }) },
+  { label: "Sair", event: () => $router.push({ name: "login" }) }
 ]);
 </script>
 

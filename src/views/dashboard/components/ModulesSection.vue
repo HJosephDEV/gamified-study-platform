@@ -45,10 +45,11 @@ const { sectionTitle, moduleInProgressList } = defineProps<ModulesSectionProps>(
     border-radius: 6px;
     border: 1px solid #ffe500;
     margin-top: 24px;
-    padding: 24px 36px;
+    padding: 24px 16px;
     display: flex;
     flex-direction: column;
     align-items: center;
+
     .modules-section__modules {
       width: 100%;
       display: grid;
@@ -59,7 +60,17 @@ const { sectionTitle, moduleInProgressList } = defineProps<ModulesSectionProps>(
   }
 }
 
-@media (max-width: 680px) {
+@media (max-width: 1224px) and (min-width: 1025px) {
+  .modules-section__wrapper {
+    .modules-section__container {
+      .modules-section__modules {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+}
+
+@media (max-width: 720px) {
   .modules-section__wrapper {
     .modules-section__container {
       .modules-section__modules {

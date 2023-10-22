@@ -3,14 +3,16 @@
     <div class="task-view__content">
       <h1 class="task-view__module-name">Variáveis</h1>
       <ProgressBar :percentage="75" />
-      <MultipleChoiceTask />
+      <!-- <MultipleChoiceTask /> -->
+      <DraggableTask />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import ProgressBar from "@/components/progress-bar/ProgressBar.vue";
-import MultipleChoiceTask from "./components/multiple-choice-task/MultipleChoiceTask.vue";
+import DraggableTask from "./components/draggable-task/DraggableTask.vue";
+// import MultipleChoiceTask from "./components/multiple-choice-task/MultipleChoiceTask.vue";
 </script>
 
 <style lang="scss" scoped>

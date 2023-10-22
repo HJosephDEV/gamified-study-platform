@@ -15,7 +15,7 @@ import { Code2 } from "lucide-vue-next";
 const { moduleId, moduleName } = defineProps<SectionModuleProps>();
 
 const redirectToModule = (id: number) => {
-  console.log(id);
+  console.log("module", id);
 };
 </script>
 

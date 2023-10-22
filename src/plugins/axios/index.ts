@@ -1,11 +1,26 @@
 import axios from "axios";
 
-// Define as configurações padrões quando cria a instância
-const instance = axios.create({
+const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL
 });
 
-// Altera as configurações padrões após a instância ser criada
-// instance.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
+api.interceptors.request.use(
+  (config) => {
+    config.headers.Authorization = `Bearer ${localStorage.getItem("token")}`;
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
-export default instance;
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+export default api;

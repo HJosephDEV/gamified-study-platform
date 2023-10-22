@@ -22,7 +22,7 @@
         @click="handleCharacterModal('open')"
       >
         <img
-          :src="selectedProfile"
+          :src="selectedProfile?.src"
           alt="Foto de perfil"
         />
       </div>
@@ -38,28 +38,35 @@
 </template>
 
 <script lang="ts" setup>
-import { inject, ref, computed } from "vue";
+import { inject, ref, computed, nextTick } from "vue";
 
-import { useRegisterStore } from "@/stores/RegisterStore";
 import type { ProviderAppProps } from "@/@types/providers/App";
+import { useAppStore } from "@/stores/AppStore";
+import { useRegisterStore } from "@/stores/RegisterStore";
 
 import CharactersModal from "@/components/characters-modal/CharactersModal.vue";
 import AppButton from "@/components/app-button/AppButton.vue";
 import BackButton from "@/components/back-button/BackButton.vue";
+import { loginUserService, registerUserService } from "@/services/user/service";
+import { useUserStore } from "@/stores/UserStore";
+import { storeToRefs } from "pinia";
+import type { UserProps } from "@/@types/services/UserService";
 
 const { $router } = inject<ProviderAppProps>("app") || ({} as ProviderAppProps);
+
 const registerStore = useRegisterStore();
-const { changeStep } = registerStore;
+const userStore = useUserStore();
+const appStore = useAppStore();
+
+const { changeStep, registerFields } = registerStore;
+const { userData } = storeToRefs(userStore);
+const { handleLoading } = appStore;
+
 const backToStepOne = () => changeStep(1);
 
 const opennedCharacterModal = ref(false);
 const handleCharacterModal = (action: string) => {
-  if (action === "open") {
-    opennedCharacterModal.value = true;
-    return;
-  }
-
-  opennedCharacterModal.value = false;
+  opennedCharacterModal.value = action === "open";
 };
 
 const profileList = ref([
@@ -69,7 +76,6 @@ const profileList = ref([
   { id: 4, src: "/src/assets/images/poro.png", selected: false },
   { id: 5, src: "/src/assets/images/poro.png", selected: false },
   { id: 6, src: "/src/assets/images/poro.png", selected: false },
-  { id: 7, src: "/src/assets/images/poro.png", selected: false },
   { id: 8, src: "/src/assets/images/poro.png", selected: false }
 ]);
 
@@ -79,10 +85,67 @@ const selectProfile = (id: number | string) => {
   });
 };
 
-const selectedProfile = computed(() => profileList.value.find((profile) => profile.selected)?.src);
+const selectedProfile = computed(() => profileList.value.find((profile) => profile.selected));
 
-const register = () => {
-  $router.push({ name: "home" });
+const saveUserData = (infos: UserProps | undefined) => {
+  if (!infos) return;
+
+  userData.value = {
+    id: infos.id,
+    firstname: infos.nome,
+    lastname: infos.sobrenome,
+    username: infos.login,
+    email: infos.email,
+    userLevel: infos.user_level,
+    userExp: infos.user_exp,
+    userNextLevelExp: infos.user_next_level_exp,
+    blocked: infos.bloqueado,
+    lifes: infos.vidas,
+    avatarId: infos.id_avatar,
+    avatarSrc: infos.url_avatar,
+    isAdmin: infos.is_admin,
+    token: infos.token
+  };
+
+  localStorage.setItem("token", infos.token);
+};
+
+const login = async () => {
+  const payload = {
+    login: registerFields.email.value,
+    senha: registerFields.password.value
+  };
+
+  try {
+    const response = await loginUserService(payload);
+    saveUserData(response.data);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    handleLoading(false);
+    nextTick(() => $router.push({ name: "dashboard" }));
+  }
+};
+
+const register = async () => {
+  const payload = {
+    nome: registerFields.firstname.value,
+    sobrenome: registerFields.lastname.value,
+    login: registerFields.username.value,
+    email: registerFields.email.value,
+    senha: registerFields.password.value,
+    id_avatar: selectedProfile.value!.id,
+    is_admin: false
+  };
+
+  handleLoading(true);
+  try {
+    await registerUserService(payload);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    login();
+  }
 };
 </script>
 

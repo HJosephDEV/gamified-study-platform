@@ -25,18 +25,21 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, inject } from "vue";
-import type { ProviderAppProps } from "@/@types/providers/App";
+import { ref } from "vue";
+import router from "@/router";
 
 import { Heart } from "lucide-vue-next";
 import AppDropdown from "@/components/app-dropdown/AppDropdown.vue";
 
-const { $router } = inject<ProviderAppProps>("app") || ({} as ProviderAppProps);
+const logout = () => {
+  localStorage.clear();
+  router.push({ name: "login" });
+};
 
 const optionList = ref([
-  { label: "Meus módulos", event: () => $router.push({ name: "dashboard" }) },
-  { label: "Configurações", event: () => $router.push({ name: "settings" }) },
-  { label: "Sair", event: () => $router.push({ name: "login" }) }
+  { label: "Meus módulos", event: () => router.push({ name: "dashboard" }) },
+  { label: "Configurações", event: () => router.push({ name: "settings" }) },
+  { label: "Sair", event: () => logout() }
 ]);
 </script>
 

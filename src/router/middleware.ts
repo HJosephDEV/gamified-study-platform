@@ -54,7 +54,7 @@ router.beforeEach(async (to, from, next) => {
   const isLoggedUser = checkAuthenticationUser(localStorage.getItem("token"));
   const authenticationPages = ["login", "register"];
 
-  !userData.value && isLoggedUser && (await getUser());
+  !Object.keys(userData.value).length && isLoggedUser && (await getUser());
 
   if (!isLoggedUser && !authenticationPages.includes(to.name?.toString() || ""))
     return next({ name: "login" });

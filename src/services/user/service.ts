@@ -16,7 +16,7 @@ export const registerUserService = async (payload: RegisterParams) => {
     const response = await api.post("/usuario", payload);
     return response.data;
   } catch (error) {
-    return error;
+    return Promise.reject(error);
   }
 };
 

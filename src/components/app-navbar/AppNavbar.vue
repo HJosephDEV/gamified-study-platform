@@ -4,18 +4,20 @@
       <div class="app-navbar__profile">
         <div class="app-navbar__profile-infos">
           <div class="app-navbar__profile-texts">
-            <span class="app-navbar__profile-name">haasedevv</span>
-            <span class="app-navbar__profile-level">Level 30</span>
+            <span class="app-navbar__profile-name">{{ userData.username }}</span>
+            <span class="app-navbar__profile-level">Level {{ userData.userLevel }}</span>
           </div>
           <div class="app-navbar__profile-lifes">
-            <Heart />
-            <Heart />
-            <Heart class="lost" />
+            <Heart
+              v-for="index in 3"
+              :key="`life-${index}`"
+              :class="{ lost: !!userData.lifes?.toString() && index > userData.lifes }"
+            />
           </div>
         </div>
         <div class="app-navbar__profile-photo">
           <img
-            src="/src/assets/images/poro.png"
+            :src="userData.avatarSrc"
             alt="Foto de perfil"
           />
         </div>
@@ -25,18 +27,25 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, inject } from "vue";
-import type { ProviderAppProps } from "@/@types/providers/App";
+import { ref } from "vue";
+import router from "@/router";
 
 import { Heart } from "lucide-vue-next";
 import AppDropdown from "@/components/app-dropdown/AppDropdown.vue";
+import { useUserStore } from "@/stores/UserStore";
 
-const { $router } = inject<ProviderAppProps>("app") || ({} as ProviderAppProps);
+const userStore = useUserStore();
+const { userData } = userStore;
+
+const logout = () => {
+  localStorage.clear();
+  router.push({ name: "login" });
+};
 
 const optionList = ref([
-  { label: "Meus módulos", event: () => $router.push({ name: "dashboard" }) },
-  { label: "Configurações", event: () => $router.push({ name: "settings" }) },
-  { label: "Sair", event: () => $router.push({ name: "login" }) }
+  { label: "Meus módulos", event: () => router.push({ name: "dashboard" }) },
+  { label: "Configurações", event: () => router.push({ name: "settings" }) },
+  { label: "Sair", event: () => logout() }
 ]);
 </script>
 

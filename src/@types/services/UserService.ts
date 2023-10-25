@@ -30,6 +30,15 @@ export type LoginProps = {
   senha: string;
 };
 
+export type ChangeAvatarPayload = {
+  id_avatar: number;
+};
+
+export type ChangeAvatarProps = {
+  message: string;
+  data: null;
+};
+
 export type RegisterParams = {
   nome: string;
   sobrenome: string;

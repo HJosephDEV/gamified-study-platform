@@ -26,12 +26,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, type Ref } from "vue";
+import { onMounted, ref, type Ref } from "vue";
 import { isEmail, hasEspecialCaracter } from "@/utils";
 import type { InfoFields } from "@/@types/components/InfoCard";
 
 import AppButton from "@/components/app-button/AppButton.vue";
 import FormInput from "@/components/form-input/FormInput.vue";
+import { useUserStore } from "@/stores/UserStore";
+
+const userStore = useUserStore();
+const { userData } = userStore;
 
 const checkRequiredField = (fieldsParam: InfoFields, key: string) => {
   const status = !!fieldsParam[key].value;
@@ -118,6 +122,13 @@ const save = () => {
   const isValid = validateFields();
   if (!isValid) return;
 };
+
+onMounted(() => {
+  fields.value.firstname.value = userData.firstname || "";
+  fields.value.lastname.value = userData.lastname || "";
+  fields.value.username.value = userData.username || "";
+  fields.value.email.value = userData.email || "";
+});
 </script>
 
 <style lang="scss" scoped>

@@ -2,6 +2,7 @@ export type ProfileProps = {
   id: number;
   src: string;
   selected: boolean;
+  blocked: boolean;
 };
 
 export type CharacterModalProps = {
@@ -10,5 +11,5 @@ export type CharacterModalProps = {
 
 export type CharacterModalEmitProps = {
   (e: "close"): void;
-  (e: "selecProfileEvent", value: number | string): number | string;
+  (e: "selecProfileEvent", value: number): number;
 };

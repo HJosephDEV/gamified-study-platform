@@ -10,10 +10,12 @@
       <div class="profile-card__right-container">
         <div class="profile-card__profile-infos">
           <span class="profile-card__profile-name text-ellipsis">
-            Joseph Haase Joseph Haase Joseph Haase
+            {{ userData.username }} {{ userData.lastname }}
           </span>
-          <span class="profile-card__profile-username text-ellipsis">haasedevv</span>
-          <span class="profile-card__profile-level text-ellipsis">Level 30</span>
+          <span class="profile-card__profile-username text-ellipsis">{{ userData.username }}</span>
+          <span class="profile-card__profile-level text-ellipsis"
+            >Level {{ userData.userLevel }}</span
+          >
         </div>
       </div>
     </div>
@@ -28,16 +30,26 @@
     <CharactersModal
       v-if="opennedCharacterModal"
       :profile-list="profileList"
-      @selec-profile-event="selectProfile"
+      @selec-profile-event="selectAvatar"
       @close="handleCharacterModal('close')"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, type Ref } from "vue";
+import type { ProfileProps } from "@/@types/components/CharacterModal";
 import AppButton from "@/components/app-button/AppButton.vue";
 import CharactersModal from "@/components/characters-modal/CharactersModal.vue";
+import { useUserStore } from "@/stores/UserStore";
+import { getAvatarsService } from "@/services/avatar/service";
+import { useAppStore } from "@/stores/AppStore";
+import { changeAvatarUserService } from "@/services/user/service";
+
+const appStore = useAppStore();
+const userStore = useUserStore();
+const { userData } = userStore;
+const { handleLoading } = appStore;
 
 const opennedCharacterModal = ref(false);
 const handleCharacterModal = (action: string) => {
@@ -49,24 +61,46 @@ const handleCharacterModal = (action: string) => {
   opennedCharacterModal.value = false;
 };
 
-const profileList = ref([
-  { id: 1, src: "/src/assets/images/poro.png", selected: true },
-  { id: 2, src: "/src/assets/images/poro.png", selected: false },
-  { id: 3, src: "/src/assets/images/poro.png", selected: false },
-  { id: 4, src: "/src/assets/images/poro.png", selected: false },
-  { id: 5, src: "/src/assets/images/poro.png", selected: false },
-  { id: 6, src: "/src/assets/images/poro.png", selected: false },
-  { id: 7, src: "/src/assets/images/poro.png", selected: false },
-  { id: 8, src: "/src/assets/images/poro.png", selected: false }
-]);
+const profileList: Ref<ProfileProps[]> = ref([]);
 
-const selectProfile = (id: number | string) => {
-  profileList.value.forEach((profile) => {
-    profile.selected = profile.id === id;
-  });
+const getAvatars = async () => {
+  handleLoading(true);
+  try {
+    const response = await getAvatarsService();
+    const replacedList = response.data.map((avatar) => ({
+      id: avatar.id,
+      src: avatar.url,
+      selected: avatar.selecionado,
+      blocked: avatar.desbloqueado
+    }));
+    profileList.value = [...replacedList];
+  } catch (error) {
+    console.error(error);
+  } finally {
+    handleLoading(false);
+  }
+};
+
+const selectAvatar = async (id: number) => {
+  const payload = {
+    id_avatar: id
+  };
+
+  handleLoading(true);
+  try {
+    await changeAvatarUserService(payload);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    handleLoading(false);
+  }
 };
 
 const selectedProfile = computed(() => profileList.value.find((profile) => profile.selected)?.src);
+
+onMounted(() => {
+  getAvatars();
+});
 </script>
 
 <style lang="scss" scoped>

@@ -48,3 +48,10 @@ export type RegisterParams = {
   is_admin: boolean;
   id_avatar: number;
 };
+
+export type ChangeInfosProps = {
+  nome: string;
+  sobrenome: string;
+  login: string;
+  email: string;
+};

@@ -3,6 +3,7 @@ import api from "@/plugins/axios";
 import type {
   ChangeAvatarPayload,
   ChangeAvatarProps,
+  ChangeInfosPayload,
   GetLoginProps,
   LoginProps,
   RegisterParams
@@ -34,11 +35,21 @@ export const getUserService = async (): Promise<GetLoginProps> => {
     return Promise.reject(error);
   }
 };
+
 export const changeAvatarUserService = async (
   payload: ChangeAvatarPayload
 ): Promise<ChangeAvatarProps> => {
   try {
     const response = await api.put<ChangeAvatarProps>("usuario/trocar-avatar", payload);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const changeUserInfosService = async (payload: ChangeInfosPayload): Promise<void> => {
+  try {
+    const response = await api.put<void>("usuario/trocar-dados", payload);
     return response.data;
   } catch (error) {
     return Promise.reject(error);

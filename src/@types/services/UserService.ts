@@ -30,6 +30,15 @@ export type LoginProps = {
   senha: string;
 };
 
+export type ChangeAvatarPayload = {
+  id_avatar: number;
+};
+
+export type ChangeAvatarProps = {
+  message: string;
+  data: null;
+};
+
 export type RegisterParams = {
   nome: string;
   sobrenome: string;
@@ -38,4 +47,15 @@ export type RegisterParams = {
   senha: string;
   is_admin: boolean;
   id_avatar: number;
+};
+
+export type ChangeInfosPayload = {
+  nome: string;
+  sobrenome: string;
+  login: string;
+  email: string;
+};
+
+export type ChangePasswordPayload = {
+  senha: string;
 };

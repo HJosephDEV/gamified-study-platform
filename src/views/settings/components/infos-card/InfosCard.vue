@@ -26,12 +26,20 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, type Ref } from "vue";
+import { onMounted, ref, type Ref } from "vue";
 import { isEmail, hasEspecialCaracter } from "@/utils";
 import type { InfoFields } from "@/@types/components/InfoCard";
 
 import AppButton from "@/components/app-button/AppButton.vue";
 import FormInput from "@/components/form-input/FormInput.vue";
+import { useUserStore } from "@/stores/UserStore";
+import { useAppStore } from "@/stores/AppStore";
+import { changeUserInfosService } from "@/services/user/service";
+
+const appStore = useAppStore();
+const userStore = useUserStore();
+const { handleLoading } = appStore;
+const { userData } = userStore;
 
 const checkRequiredField = (fieldsParam: InfoFields, key: string) => {
   const status = !!fieldsParam[key].value;
@@ -114,10 +122,37 @@ const validateFields = () => {
   return isValid;
 };
 
+const changeUserInfos = async () => {
+  const payload = {
+    nome: fields.value.firstname.value,
+    sobrenome: fields.value.lastname.value,
+    login: fields.value.username.value,
+    email: fields.value.email.value
+  };
+  handleLoading(true);
+
+  try {
+    await changeUserInfosService(payload);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    handleLoading(false);
+  }
+};
+
 const save = () => {
   const isValid = validateFields();
   if (!isValid) return;
+
+  changeUserInfos();
 };
+
+onMounted(() => {
+  fields.value.firstname.value = userData.firstname || "";
+  fields.value.lastname.value = userData.lastname || "";
+  fields.value.username.value = userData.username || "";
+  fields.value.email.value = userData.email || "";
+});
 </script>
 
 <style lang="scss" scoped>

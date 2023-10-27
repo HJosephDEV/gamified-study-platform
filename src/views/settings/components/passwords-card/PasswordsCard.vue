@@ -31,6 +31,11 @@ import type { PasswordFields } from "@/@types/components/PasswordsCard";
 
 import AppButton from "@/components/app-button/AppButton.vue";
 import FormInput from "@/components/form-input/FormInput.vue";
+import { useAppStore } from "@/stores/AppStore";
+import { changeUserPasswordService } from "@/services/user/service";
+
+const appStore = useAppStore();
+const { handleLoading } = appStore;
 
 const checkRequiredField = (fieldsParam: PasswordFields, key: string) => {
   const status = !!fieldsParam[key].value;
@@ -86,9 +91,27 @@ const validateFields = () => {
   return isValid;
 };
 
+const changeUserPassword = async () => {
+  const payload = {
+    senha: fields.value.password.value
+  };
+
+  handleLoading(true);
+
+  try {
+    await changeUserPasswordService(payload);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    handleLoading(false);
+  }
+};
+
 const save = () => {
   const isValid = validateFields();
   if (!isValid) return;
+
+  changeUserPassword();
 };
 </script>
 

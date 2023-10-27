@@ -49,9 +49,13 @@ export type RegisterParams = {
   id_avatar: number;
 };
 
-export type ChangeInfosProps = {
+export type ChangeInfosPayload = {
   nome: string;
   sobrenome: string;
   login: string;
   email: string;
+};
+
+export type ChangePasswordPayload = {
+  senha: string;
 };

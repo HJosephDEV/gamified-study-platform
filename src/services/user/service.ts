@@ -4,6 +4,7 @@ import type {
   ChangeAvatarPayload,
   ChangeAvatarProps,
   ChangeInfosPayload,
+  ChangePasswordPayload,
   GetLoginProps,
   LoginProps,
   RegisterParams
@@ -50,6 +51,15 @@ export const changeAvatarUserService = async (
 export const changeUserInfosService = async (payload: ChangeInfosPayload): Promise<void> => {
   try {
     const response = await api.put<void>("usuario/trocar-dados", payload);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const changeUserPasswordService = async (payload: ChangePasswordPayload): Promise<void> => {
+  try {
+    const response = await api.put<void>("usuario/trocar-senha", payload);
     return response.data;
   } catch (error) {
     return Promise.reject(error);

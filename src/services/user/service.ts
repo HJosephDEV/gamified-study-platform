@@ -67,9 +67,9 @@ export const changeUserPasswordService = async (payload: ChangePasswordPayload):
   }
 };
 
-export const getRankingService = async (): Promise<GETRankingProps[]> => {
+export const getRankingService = async (): Promise<GETRankingProps> => {
   try {
-    const response = await api.get<GETRankingProps[]>("usuario/ranking");
+    const response = await api.get<GETRankingProps>("usuario/ranking");
     return response.data;
   } catch (error) {
     return Promise.reject(error);

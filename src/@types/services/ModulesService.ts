@@ -1,9 +1,17 @@
-export type POSTCreateModule = {
+type Module = {
   id: number;
   nome: string;
   descricao: string;
 };
 
-export type GETModules = POSTCreateModule[];
+export type POSTCreateModule = {
+  message: string;
+  data: Module;
+};
 
-export type GETInitializedModules = POSTCreateModule[];
+export type GETModules = {
+  message: string;
+  data: Module[];
+};
+
+export type GETInitializedModules = GETModules;

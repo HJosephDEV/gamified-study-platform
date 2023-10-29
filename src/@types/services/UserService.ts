@@ -60,10 +60,15 @@ export type ChangePasswordPayload = {
   senha: string;
 };
 
-export type GETRankingProps = {
+type RankingProps = {
   nome: string;
   user_level: number;
   user_exp: number;
   url: string;
   rank: number;
+};
+
+export type GETRankingProps = {
+  message: string;
+  data: RankingProps[];
 };

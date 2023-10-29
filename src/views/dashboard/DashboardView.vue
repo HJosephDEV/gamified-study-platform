@@ -1,6 +1,12 @@
 <template>
-  <main class="dashboard-page__container">
+  <main
+    :class="[
+      'dashboard-page__container',
+      { '--with-initialized-modules': initializedModulesList.length > 0 }
+    ]"
+  >
     <ModulesSection
+      v-show="initializedModulesList.length > 0"
       class="dashboard-page__modules-in-progress"
       section-title="Módulos em andamento"
       :modules="initializedModulesList"
@@ -44,9 +50,9 @@ const getInitializedModules = async (hasLoading = true) => {
 
   try {
     const response = await getInitializedModulesService();
-    if (response?.length === 0) return;
+    if (response.data?.length === 0) return;
 
-    const replacedInitializedModuleList = response.map((module) => ({
+    const replacedInitializedModuleList = response.data.map((module) => ({
       id: module.id,
       name: module.nome,
       description: module.descricao
@@ -65,9 +71,10 @@ const getModules = async (hasLoading = true) => {
 
   try {
     const response = await getModulesService();
-    if (response?.length === 0) return;
+    console.log;
+    if (response.data?.length === 0) return;
 
-    const replacedModules = response.map((module) => ({
+    const replacedModules = response.data.map((module) => ({
       id: module.id,
       name: module.nome,
       description: module.descricao
@@ -86,9 +93,9 @@ const getRanking = async (hasLoading = true) => {
 
   try {
     const response = await getRankingService();
-    if (response?.length === 0) return;
+    if (response.data?.length === 0) return;
 
-    const replacedRanking = response.map((user) => ({
+    const replacedRanking = response.data.map((user) => ({
       username: user.nome,
       exp: user.user_exp,
       rank: user.rank,
@@ -114,10 +121,15 @@ onMounted(() => {
   display: grid;
   gap: 36px 48px;
   grid-template:
-    "progress ranking" 1fr
-    "available ranking" 1fr
+    "available ranking" auto
     / 1fr 351px;
 
+  &.--with-initialized-modules {
+    grid-template:
+      "progress ranking" auto
+      "available ranking" auto
+      / 1fr 351px;
+  }
   .dashboard-page__modules-in-progress {
     grid-area: progress;
   }
@@ -143,10 +155,17 @@ onMounted(() => {
 @media (max-width: 1024px) {
   .dashboard-page__container {
     grid-template:
-      "progress" 1fr
       "available" 1fr
       "ranking" 500px
       / 1fr;
+
+    &.--with-initialized-modules {
+      grid-template:
+        "progress" 1fr
+        "available" 1fr
+        "ranking" 500px
+        / 1fr;
+    }
 
     .dashboard-page__ranking-container {
       .dashboard-page__ranking {
@@ -159,4 +178,3 @@ onMounted(() => {
   }
 }
 </style>
-@/@types/views/Dashboard

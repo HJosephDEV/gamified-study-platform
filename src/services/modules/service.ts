@@ -12,7 +12,7 @@ export const getInitializedModulesService = async (): Promise<GETInitializedModu
 
 export const getModulesService = async (): Promise<GETModules> => {
   try {
-    const response = await api.get<GETInitializedModules>("/modulos-iniciados");
+    const response = await api.get<GETModules>("/modulos");
     return response.data;
   } catch (error) {
     return Promise.reject(error);

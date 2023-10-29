@@ -1,23 +1,29 @@
 <template>
   <li
-    class="module-task__container ellipsis"
+    :class="['module-task__container ellipsis', { completed: isCompleted }]"
     @click="redirectToTask"
   >
-    {{ taskName }}
+    <span class="module-task__name">
+      {{ taskName }}
+    </span>
+
+    <span
+      v-if="isCompleted"
+      class="module-task__completed-text"
+      >✓</span
+    >
   </li>
 </template>
 
 <script lang="ts" setup>
-import { inject } from "vue";
+import router from "@/router";
 
-import type { ProviderAppProps } from "@/@types/providers/App";
-import type { ModuleTaskProps } from "@/@types/components/ModuleTask";
+import type { ModuleTaskProps } from "@/@types/views/Tasks";
 
-const { taskId, taskName } = defineProps<ModuleTaskProps>();
-const { $router } = inject<ProviderAppProps>("app") || ({} as ProviderAppProps);
+const { taskId, taskName, isCompleted } = defineProps<ModuleTaskProps>();
 
 const redirectToTask = () =>
-  $router.push({
+  router.push({
     name: "task",
     params: {
       taskId
@@ -32,13 +38,33 @@ const redirectToTask = () =>
   background: linear-gradient(100deg, #fff 42.44%, #ffe500 66.39%);
   cursor: pointer;
   transition: all 0.5s ease;
+  position: relative;
 
-  color: #212121;
-  font-family: Poppins;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
+  &.completed {
+    background: #31ff6d !important;
+  }
+
+  .module-task__name {
+    color: #212121;
+    font-family: Poppins;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+  }
+
+  .module-task__completed-text {
+    color: #000;
+    font-family: Poppins;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+
+    position: absolute;
+    top: -5px;
+    right: 2px;
+  }
 
   &.ellipsis {
     text-overflow: ellipsis;
@@ -50,6 +76,7 @@ const redirectToTask = () =>
     background: #ffe500;
     animation: taskHover 0.5s linear infinite;
   }
+
   @keyframes taskHover {
     100% {
       background: #ffe500;

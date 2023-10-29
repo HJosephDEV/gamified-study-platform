@@ -9,27 +9,29 @@
     <h2 class="task-card__title">Tarefas</h2>
     <ul class="task-card__task-list">
       <ModuleTask
-        v-for="(moduleTask, index) in 5"
+        v-for="(task, index) in tasks"
         :key="`module-task-${index}`"
-        :task-id="1"
-        task-name="Tokyo"
+        :task-id="task.taskId"
+        :task-name="task.taskName"
+        :is-completed="task.isCompleted"
       />
     </ul>
-    <AppButton is-full>Ver mais</AppButton>
+    <!-- <AppButton is-full>Ver mais</AppButton> -->
   </div>
 </template>
 
 <script lang="ts" setup>
-import { inject } from "vue";
-import type { ProviderAppProps } from "@/@types/providers/App";
+import router from "@/router";
 
-import AppButton from "@/components/app-button/AppButton.vue";
+import type { TasksCardProps } from "@/@types/views/Tasks";
+
+// import AppButton from "@/components/app-button/AppButton.vue";
 import BackButton from "@/components/back-button/BackButton.vue";
 import ModuleTask from "../task/ModuleTask.vue";
 
-const { $router } = inject<ProviderAppProps>("app") || ({} as ProviderAppProps);
+const { tasks } = defineProps<TasksCardProps>();
 
-const redirecToHome = () => $router.push({ name: "dashboard" });
+const redirecToHome = () => router.push({ name: "dashboard" });
 </script>
 
 <style lang="scss" scoped>

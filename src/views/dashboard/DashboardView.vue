@@ -44,6 +44,8 @@ const getInitializedModules = async (hasLoading = true) => {
 
   try {
     const response = await getInitializedModulesService();
+    if (response?.length === 0) return;
+
     const replacedInitializedModuleList = response.map((module) => ({
       id: module.id,
       name: module.nome,
@@ -63,6 +65,8 @@ const getModules = async (hasLoading = true) => {
 
   try {
     const response = await getModulesService();
+    if (response?.length === 0) return;
+
     const replacedModules = response.map((module) => ({
       id: module.id,
       name: module.nome,
@@ -82,6 +86,8 @@ const getRanking = async (hasLoading = true) => {
 
   try {
     const response = await getRankingService();
+    if (response?.length === 0) return;
+
     const replacedRanking = response.map((user) => ({
       username: user.nome,
       exp: user.user_exp,
@@ -97,7 +103,9 @@ const getRanking = async (hasLoading = true) => {
   }
 };
 
-onMounted(() => {});
+onMounted(() => {
+  Promise.all([getInitializedModules(false), getModules(false), getRanking(false)]);
+});
 </script>
 
 <style lang="scss" scoped>

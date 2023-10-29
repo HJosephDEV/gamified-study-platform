@@ -11,8 +11,8 @@
           :module-name="module.name"
         />
       </div>
-
-      <AppButton>Veja mais</AppButton>
+      <!-- 
+      <AppButton>Veja mais</AppButton> -->
     </div>
   </section>
 </template>
@@ -21,7 +21,7 @@
 import type { ModulesSectionProps } from "@/@types/views/Dashboard";
 
 import SectionModule from "./SectionModule.vue";
-import AppButton from "@/components/app-button/AppButton.vue";
+// import AppButton from "@/components/app-button/AppButton.vue";
 
 const { sectionTitle, modules } = defineProps<ModulesSectionProps>();
 </script>

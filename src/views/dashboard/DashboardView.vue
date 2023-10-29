@@ -24,11 +24,12 @@
 <script setup lang="ts">
 import { onMounted, ref, type Ref } from "vue";
 
-import type { ModuleProps } from "@/@types/views/Dashboard";
+import type { ModuleProps, RankingProps } from "@/@types/views/Dashboard";
 import ModulesSection from "./components/ModulesSection.vue";
 import RankingList from "./components/ranking-list/RankingList.vue";
 import { useAppStore } from "@/stores/AppStore";
 import { getInitializedModulesService, getModulesService } from "@/services/modules/service";
+import { getRankingService } from "@/services/user/service";
 
 const appStore = useAppStore();
 const { handleLoading } = appStore;
@@ -36,12 +37,7 @@ const { handleLoading } = appStore;
 const initializedModulesList: Ref<ModuleProps[]> = ref([]);
 const modulesList: Ref<ModuleProps[]> = ref([]);
 
-const rankingList = ref([
-  { username: "haasedevv", exp: 1200, rank: 1 },
-  { username: "haasedevv", exp: 1200, rank: 2 },
-  { username: "haasedevv", exp: 1200, rank: 3 },
-  { username: "haasedevv", exp: 1200, rank: 4 }
-]);
+const rankingList: Ref<RankingProps[]> = ref([]);
 
 const getInitializedModules = async (hasLoading = true) => {
   hasLoading && handleLoading(true);
@@ -74,6 +70,26 @@ const getModules = async (hasLoading = true) => {
     }));
 
     modulesList.value = [...replacedModules];
+  } catch (error) {
+    console.error(error);
+  } finally {
+    hasLoading && handleLoading(false);
+  }
+};
+
+const getRanking = async (hasLoading = true) => {
+  hasLoading && handleLoading(true);
+
+  try {
+    const response = await getRankingService();
+    const replacedRanking = response.map((user) => ({
+      username: user.nome,
+      exp: user.user_exp,
+      rank: user.rank,
+      image: user.url
+    }));
+
+    rankingList.value = [...replacedRanking];
   } catch (error) {
     console.error(error);
   } finally {

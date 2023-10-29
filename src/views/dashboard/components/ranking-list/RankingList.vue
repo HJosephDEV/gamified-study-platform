@@ -8,13 +8,14 @@
         :username="ranking.username"
         :exp="ranking.exp"
         :rank="ranking.rank"
+        :image="ranking.image"
       />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { RankingListProps } from "@/@types/components/RankingList";
+import type { RankingListProps } from "@/@types/views/Dashboard";
 
 import RankingItem from "./RankingItem.vue";
 

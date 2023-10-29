@@ -59,3 +59,11 @@ export type ChangeInfosPayload = {
 export type ChangePasswordPayload = {
   senha: string;
 };
+
+export type GETRankingProps = {
+  nome: string;
+  user_level: number;
+  user_exp: number;
+  url: string;
+  rank: number;
+};

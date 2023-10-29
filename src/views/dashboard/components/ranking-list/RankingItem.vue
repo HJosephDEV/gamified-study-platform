@@ -3,7 +3,7 @@
     <div class="ranking-item__profile">
       <div class="raking-item__profile-photo">
         <img
-          src="/src/assets/images/poro.png"
+          :src="image"
           alt="Foto de perfil"
         />
       </div>
@@ -23,11 +23,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { RankingItemProps } from "@/@types/components/RankingItem";
+import type { RankingProps } from "@/@types/views/Dashboard";
 
 import AppIcon from "@/components/app-icon/AppIcon.vue";
 
-const { username, exp, rank } = defineProps<RankingItemProps>();
+const { username, exp, rank, image } = defineProps<RankingProps>();
 </script>
 
 <style lang="scss" scoped>

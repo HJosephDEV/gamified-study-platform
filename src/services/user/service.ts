@@ -5,6 +5,7 @@ import type {
   ChangeAvatarProps,
   ChangeInfosPayload,
   ChangePasswordPayload,
+  GETRankingProps,
   GetLoginProps,
   LoginProps,
   RegisterParams
@@ -60,6 +61,15 @@ export const changeUserInfosService = async (payload: ChangeInfosPayload): Promi
 export const changeUserPasswordService = async (payload: ChangePasswordPayload): Promise<void> => {
   try {
     const response = await api.put<void>("usuario/trocar-senha", payload);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const getRankingService = async (): Promise<GETRankingProps> => {
+  try {
+    const response = await api.get<GETRankingProps>("usuario/ranking");
     return response.data;
   } catch (error) {
     return Promise.reject(error);

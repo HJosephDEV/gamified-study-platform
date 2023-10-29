@@ -5,7 +5,7 @@
     <div class="modules-section__container">
       <div class="modules-section__modules">
         <SectionModule
-          v-for="(module, index) in moduleInProgressList"
+          v-for="(module, index) in modules"
           :key="`module-in-progress-${index}`"
           :module-id="module.id"
           :module-name="module.name"
@@ -18,12 +18,12 @@
 </template>
 
 <script lang="ts" setup>
-import type { ModulesSectionProps } from "@/@types/components/ModulesSection";
+import type { ModulesSectionProps } from "@/@types/views/Dashboard";
 
 import SectionModule from "./SectionModule.vue";
 import AppButton from "@/components/app-button/AppButton.vue";
 
-const { sectionTitle, moduleInProgressList } = defineProps<ModulesSectionProps>();
+const { sectionTitle, modules } = defineProps<ModulesSectionProps>();
 </script>
 
 <style lang="scss" scoped>
@@ -80,3 +80,4 @@ const { sectionTitle, moduleInProgressList } = defineProps<ModulesSectionProps>(
   }
 }
 </style>
+@/@types/views/Dashboard

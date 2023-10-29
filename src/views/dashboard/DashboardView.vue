@@ -3,13 +3,13 @@
     <ModulesSection
       class="dashboard-page__modules-in-progress"
       section-title="Módulos em andamento"
-      :module-in-progress-list="modulesInProgressList"
+      :modules="modulesInProgressList"
     />
 
     <ModulesSection
       class="dashboard-page__available-modules"
       section-title="Módulos disponíveis"
-      :module-in-progress-list="modulesInProgressList"
+      :modules="modulesInProgressList"
     />
 
     <div class="dashboard-page__ranking-container">
@@ -22,16 +22,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref, type Ref } from "vue";
 
+import type { ModuleProps } from "@/@types/views/Dashboard";
 import ModulesSection from "./components/ModulesSection.vue";
 import RankingList from "./components/ranking-list/RankingList.vue";
+import { useAppStore } from "@/stores/AppStore";
+import { getInitializedModulesService } from "@/services/modules/service";
 
-const modulesInProgressList = ref([
-  { id: 1, name: "Variavéis" },
-  { id: 2, name: "Variavéis" },
-  { id: 3, name: "Variavéis" }
-]);
+const appStore = useAppStore();
+const { handleLoading } = appStore;
+
+const modulesInProgressList: Ref<ModuleProps[]> = ref([]);
 
 const rankingList = ref([
   { username: "haasedevv", exp: 1200, rank: 1 },
@@ -39,6 +41,27 @@ const rankingList = ref([
   { username: "haasedevv", exp: 1200, rank: 3 },
   { username: "haasedevv", exp: 1200, rank: 4 }
 ]);
+
+const getInitializedModules = async (hasLoading = true) => {
+  hasLoading && handleLoading(true);
+
+  try {
+    const response = await getInitializedModulesService();
+    const replacedStartedModuleList = response.map((module) => ({
+      id: module.id,
+      name: module.nome,
+      description: module.descricao
+    }));
+
+    modulesInProgressList.value = [...replacedStartedModuleList];
+  } catch (error) {
+    console.error(error);
+  } finally {
+    hasLoading && handleLoading(false);
+  }
+};
+
+onMounted(() => {});
 </script>
 
 <style lang="scss" scoped>
@@ -92,3 +115,4 @@ const rankingList = ref([
   }
 }
 </style>
+@/@types/views/Dashboard

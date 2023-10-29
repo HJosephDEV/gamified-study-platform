@@ -10,12 +10,18 @@
 
 <script lang="ts" setup>
 import type { SectionModuleProps } from "@/@types/components/SectionModule";
+import router from "@/router";
 import { Code2 } from "lucide-vue-next";
 
 const { moduleId, moduleName } = defineProps<SectionModuleProps>();
 
 const redirectToModule = (id: number) => {
-  console.log("module", id);
+  router.push({
+    name: "module",
+    params: {
+      moduleId: id
+    }
+  });
 };
 </script>
 

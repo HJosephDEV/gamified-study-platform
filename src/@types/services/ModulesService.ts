@@ -4,4 +4,6 @@ export type POSTCreateModule = {
   descricao: string;
 };
 
+export type GETModules = POSTCreateModule[];
+
 export type GETInitializedModules = POSTCreateModule[];

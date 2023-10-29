@@ -3,13 +3,13 @@
     <ModulesSection
       class="dashboard-page__modules-in-progress"
       section-title="Módulos em andamento"
-      :modules="modulesInProgressList"
+      :modules="initializedModulesList"
     />
 
     <ModulesSection
       class="dashboard-page__available-modules"
       section-title="Módulos disponíveis"
-      :modules="modulesInProgressList"
+      :modules="modulesList"
     />
 
     <div class="dashboard-page__ranking-container">
@@ -28,12 +28,13 @@ import type { ModuleProps } from "@/@types/views/Dashboard";
 import ModulesSection from "./components/ModulesSection.vue";
 import RankingList from "./components/ranking-list/RankingList.vue";
 import { useAppStore } from "@/stores/AppStore";
-import { getInitializedModulesService } from "@/services/modules/service";
+import { getInitializedModulesService, getModulesService } from "@/services/modules/service";
 
 const appStore = useAppStore();
 const { handleLoading } = appStore;
 
-const modulesInProgressList: Ref<ModuleProps[]> = ref([]);
+const initializedModulesList: Ref<ModuleProps[]> = ref([]);
+const modulesList: Ref<ModuleProps[]> = ref([]);
 
 const rankingList = ref([
   { username: "haasedevv", exp: 1200, rank: 1 },
@@ -47,13 +48,32 @@ const getInitializedModules = async (hasLoading = true) => {
 
   try {
     const response = await getInitializedModulesService();
-    const replacedStartedModuleList = response.map((module) => ({
+    const replacedInitializedModuleList = response.map((module) => ({
       id: module.id,
       name: module.nome,
       description: module.descricao
     }));
 
-    modulesInProgressList.value = [...replacedStartedModuleList];
+    initializedModulesList.value = [...replacedInitializedModuleList];
+  } catch (error) {
+    console.error(error);
+  } finally {
+    hasLoading && handleLoading(false);
+  }
+};
+
+const getModules = async (hasLoading = true) => {
+  hasLoading && handleLoading(true);
+
+  try {
+    const response = await getModulesService();
+    const replacedModules = response.map((module) => ({
+      id: module.id,
+      name: module.nome,
+      description: module.descricao
+    }));
+
+    modulesList.value = [...replacedModules];
   } catch (error) {
     console.error(error);
   } finally {

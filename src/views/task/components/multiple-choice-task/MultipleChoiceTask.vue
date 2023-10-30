@@ -1,18 +1,17 @@
 <template>
-  <TaskCard>
+  <TaskCard :title="taskInfos.taskName">
     <div class="multiple-choice-task__container">
-      <div
-        class="multiple-choice-task__task"
-        v-html="statementLocal"
-      />
+      <div class="multiple-choice-task__task">
+        {{ taskInfos.taskContent }}
+      </div>
 
       <div class="multiple-choice-task__options">
         <MultipleChoiceOption
-          v-for="(answer, index) in question.answers"
+          v-for="(answer, index) in taskInfos.taskAnswers"
           :key="`answer-${index}`"
-          @click="answerQuestion(answer.id)"
+          @click="answerQuestion(answer.answerId)"
         >
-          {{ index + 1 }}) {{ answer.text }}
+          {{ index + 1 }}) {{ answer.answerDescription }}
         </MultipleChoiceOption>
       </div>
     </div>
@@ -20,34 +19,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
-
 import MultipleChoiceOption from "../multiple-choice-option/MultipleChoiceOption.vue";
 import TaskCard from "../task-card/TaskCard.vue";
+import type { MultipleChoiceProps } from "@/@types/views/Task";
 
-const question = ref({
-  statement: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-        been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
-        galley of type and scrambled it to $answer - $answer - $answer a type specimen book. It has survived not only five
-        centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-        It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum
-        passages, and more recently with desktop publishing software like Aldus PageMaker including
-        versions of Lorem Ipsum.`,
-  answers: [
-    { id: 1, text: "teste4, teste2, test3" },
-    { id: 2, text: "teste3, teste2, test3" },
-    { id: 3, text: "teste2, teste2, test3" },
-    { id: 4, text: "teste1 teste2, test3" }
-  ]
-});
-
-const isCorrectAnswer = ref(false);
-
-const statementLocal = computed(() => {
-  if (isCorrectAnswer.value) return "statementWithAnswers";
-
-  return question.value.statement.replaceAll("$answer", "__________");
-});
+const { taskInfos } = defineProps<MultipleChoiceProps>();
 
 const answerQuestion = (id: number) => {
   console.log(id);

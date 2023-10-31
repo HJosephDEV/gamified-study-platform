@@ -4,26 +4,27 @@
       class="task-card__back-button"
       @click="backToModule"
     >
-      Voltar para módulos
+      Voltar para atividades
     </BackButton>
-    <h2 class="task-card__title">Tokyo</h2>
+    <h2 class="task-card__title">{{ title }}</h2>
     <slot />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { inject } from "vue";
-import type { ProviderAppProps } from "@/@types/providers/App";
+import router from "@/router";
+
+import type { TaskCardProps } from "@/@types/views/Task";
 
 import BackButton from "@/components/back-button/BackButton.vue";
 
-const { $router } = inject<ProviderAppProps>("app") || ({} as ProviderAppProps);
+const { title } = defineProps<TaskCardProps>();
 
 const backToModule = () => {
-  $router.push({
+  router.push({
     name: "module",
     params: {
-      moduleId: $router.currentRoute.value.params.moduleId
+      moduleId: router.currentRoute.value.params.moduleId
     }
   });
 };

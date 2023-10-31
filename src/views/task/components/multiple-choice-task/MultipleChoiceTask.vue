@@ -1,18 +1,18 @@
 <template>
-  <TaskCard>
+  <TaskCard :title="taskInfos.taskName">
     <div class="multiple-choice-task__container">
       <div
         class="multiple-choice-task__task"
-        v-html="statementLocal"
+        v-html="taskContentFull || taskInfos.taskContent"
       />
 
       <div class="multiple-choice-task__options">
         <MultipleChoiceOption
-          v-for="(answer, index) in question.answers"
+          v-for="(answer, index) in taskInfos.taskAnswers"
           :key="`answer-${index}`"
-          @click="answerQuestion(answer.id)"
+          @click="answerQuestion(answer.answerId, taskInfos.taskId)"
         >
-          {{ index + 1 }}) {{ answer.text }}
+          {{ index + 1 }}) {{ answer.answerDescription }}
         </MultipleChoiceOption>
       </div>
     </div>
@@ -20,37 +20,50 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
-
+import { onUnmounted, ref } from "vue";
+import { useAppStore } from "@/stores/AppStore";
 import MultipleChoiceOption from "../multiple-choice-option/MultipleChoiceOption.vue";
 import TaskCard from "../task-card/TaskCard.vue";
+import type { MultipleChoiceProps } from "@/@types/views/Task";
+import { answerQuestionService } from "@/services/task/service";
 
-const question = ref({
-  statement: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-        been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
-        galley of type and scrambled it to $answer - $answer - $answer a type specimen book. It has survived not only five
-        centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-        It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum
-        passages, and more recently with desktop publishing software like Aldus PageMaker including
-        versions of Lorem Ipsum.`,
-  answers: [
-    { id: 1, text: "teste4, teste2, test3" },
-    { id: 2, text: "teste3, teste2, test3" },
-    { id: 3, text: "teste2, teste2, test3" },
-    { id: 4, text: "teste1 teste2, test3" }
-  ]
-});
+const appStore = useAppStore();
+const { handleLoading } = appStore;
 
-const isCorrectAnswer = ref(false);
+const { taskInfos } = defineProps<MultipleChoiceProps>();
 
-const statementLocal = computed(() => {
-  if (isCorrectAnswer.value) return "statementWithAnswers";
+const taskContentFull = ref("");
 
-  return question.value.statement.replaceAll("$answer", "__________");
-});
+const handleCorrectAnswer = (answer: string, levelup: boolean, exp: number) => {
+  taskContentFull.value = answer;
 
-const answerQuestion = (id: number) => {
-  console.log(id);
+  setTimeout(() => {}, 3000);
+};
+
+const handleIncorrectAnswer = (lifes: number) => {
+  console.log(lifes);
+};
+
+const answerQuestion = async (answerId: number, taskId: number) => {
+  handleLoading(true);
+
+  try {
+    const response = await answerQuestionService({
+      answerId: answerId.toString(),
+      taskId: taskId.toString()
+    });
+
+    if (response.data.acertou) {
+      handleCorrectAnswer(response.data.resposta, response.data.subiuNivel, response.data.exp);
+      return;
+    }
+
+    handleIncorrectAnswer(response.data.vidas);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    handleLoading(false);
+  }
 };
 </script>
 

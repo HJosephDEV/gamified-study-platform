@@ -25,3 +25,21 @@ export type GETTask = {
     tarefa: TaskProps;
   };
 };
+
+export type POSTAnswerQuestionParams = {
+  answerId: string;
+  taskId: string;
+};
+
+type AnswerResponse = {
+  acertou: boolean;
+  exp: number;
+  subiuNivel: boolean;
+  vidas: never;
+  resposta: string;
+};
+
+export type POSTAnswerQuestion = {
+  message: string;
+  data: AnswerResponse;
+};

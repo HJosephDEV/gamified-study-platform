@@ -70,13 +70,13 @@ const handleCharacterModal = (action: string) => {
 };
 
 const profileList = ref([
-  { id: 1, src: "/src/assets/images/poro.png", selected: true },
-  { id: 2, src: "/src/assets/images/poro.png", selected: false },
-  { id: 3, src: "/src/assets/images/poro.png", selected: false },
-  { id: 4, src: "/src/assets/images/poro.png", selected: false },
-  { id: 5, src: "/src/assets/images/poro.png", selected: false },
-  { id: 6, src: "/src/assets/images/poro.png", selected: false },
-  { id: 8, src: "/src/assets/images/poro.png", selected: false }
+  { id: 1, src: "/src/assets/images/poro.png", selected: true, blocked: false },
+  { id: 2, src: "/src/assets/images/poro.png", selected: false, blocked: false },
+  { id: 3, src: "/src/assets/images/poro.png", selected: false, blocked: false },
+  { id: 4, src: "/src/assets/images/poro.png", selected: false, blocked: false },
+  { id: 5, src: "/src/assets/images/poro.png", selected: false, blocked: false },
+  { id: 6, src: "/src/assets/images/poro.png", selected: false, blocked: false },
+  { id: 8, src: "/src/assets/images/poro.png", selected: false, blocked: false }
 ]);
 
 const selectProfile = (id: number | string) => {

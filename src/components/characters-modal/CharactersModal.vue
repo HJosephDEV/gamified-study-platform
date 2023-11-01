@@ -39,7 +39,7 @@ const emit = defineEmits<CharacterModalEmitProps>();
 const { profileList } = defineProps<CharacterModalProps>();
 
 const handleSelectProfile = (id: number | string) => {
-  emit("selecProfileEvent", id);
+  emit("selecProfileEvent", Number(id));
   emit("close");
 };
 </script>

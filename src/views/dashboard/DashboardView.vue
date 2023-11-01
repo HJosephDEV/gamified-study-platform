@@ -71,7 +71,6 @@ const getModules = async (hasLoading = true) => {
 
   try {
     const response = await getModulesService();
-    console.log;
     if (response.data?.length === 0) return;
 
     const replacedModules = response.data.map((module) => ({

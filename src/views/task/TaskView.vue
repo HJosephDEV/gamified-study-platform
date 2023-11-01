@@ -7,7 +7,10 @@
         v-if="Object.keys(taskInfos).length > 0 && taskInfos.task.taskType !== 2"
         :task-infos="taskInfos.task"
       />
-      <DraggableTask v-if="Object.keys(taskInfos).length > 0 && taskInfos.task.taskType === 2" />
+      <DraggableTask
+        v-if="Object.keys(taskInfos).length > 0 && taskInfos.task.taskType === 2"
+        :task-infos="taskInfos.task"
+      />
     </div>
   </div>
 </template>

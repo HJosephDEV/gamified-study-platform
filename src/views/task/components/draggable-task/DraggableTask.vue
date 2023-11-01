@@ -1,37 +1,49 @@
 <template>
-  <TaskCard>
+  <TaskCard :title="taskInfos.taskName">
     <div class="draggable-task__container">
       <div class="draggable-task__task">
-        {{ question.statement }}
+        {{ taskInfos.taskContent }}
       </div>
 
-      <span class="helper-text">Arraste os itens para as posições corretas</span>
+      <span class="helper-text">Arraste os itens para a área amarela</span>
 
-      <div class="draggable-task__options">
-        <VueDraggableNext
-          class="list-group"
-          tag="ul"
-          :list="question.options"
-          v-bind="dragOptions"
-          @start="handleIsDragging(true)"
-          @end="handleIsDragging(false)"
+      <div
+        class="draggable-task__options"
+        @drop="onDrop($event, 0)"
+        @dragover.prevent
+        @dragenter.prevent
+      >
+        <div
+          v-for="option in optionsAndAnswerDragList[0]"
+          :key="option.answerId"
+          class="drag-el"
+          @dragstart="startDrag($event, option)"
         >
-          <transition-group
-            type="transition"
-            name="flip-list"
-          >
-            <li
-              v-for="answer in question.options"
-              :key="answer.id"
-              class="list-group-item"
-            >
-              <img
-                :src="answer.image"
-                class="image-option"
-              />
-            </li>
-          </transition-group>
-        </VueDraggableNext>
+          <img
+            :src="option.answerDescription"
+            alt="opção"
+          />
+        </div>
+      </div>
+
+      <div
+        class="draggable-task__drop-zone"
+        @drop="onDrop($event, 1)"
+        @dragover.prevent
+        @dragenter.prevent
+      >
+        <div
+          v-for="option in optionsAndAnswerDragList[1]"
+          :key="option.answerId"
+          class="drag-el"
+          draggable="true"
+          @dragstart="startDrag($event, option)"
+        >
+          <img
+            :src="option.answerDescription"
+            alt="opção"
+          />
+        </div>
       </div>
 
       <AppButton @click="answerQuestion">Responder</AppButton>
@@ -40,41 +52,115 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import { VueDraggableNext } from "vue-draggable-next";
+import { onMounted, onUnmounted, ref, type Ref } from "vue";
+import { storeToRefs } from "pinia";
+import router from "@/router";
+
+import type { AnswerProps, TaskComponentProps } from "@/@types/views/Task";
+import { useAppStore } from "@/stores/AppStore";
+import { answerQuestionService } from "@/services/task/service";
 
 import TaskCard from "../task-card/TaskCard.vue";
 import AppButton from "@/components/app-button/AppButton.vue";
+import { useUserStore } from "@/stores/UserStore";
 
-const question = ref({
-  statement: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-          been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
-          galley of type and scrambled it to $answer - $answer - $answer a type specimen book. It has survived not only five
-          centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-          It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum
-          passages, and more recently with desktop publishing software like Aldus PageMaker including
-          versions of Lorem Ipsum.`,
-  options: [
-    { id: 1, image: "/src/assets/images/pixel-art.png" },
-    { id: 2, image: "/src/assets/images/pixel-art.png" },
-    { id: 3, image: "/src/assets/images/pixel-art.png" },
-    { id: 4, image: "/src/assets/images/pixel-art.png" }
-  ]
+const { taskInfos } = defineProps<TaskComponentProps>();
+
+const appStore = useAppStore();
+const useStore = useUserStore();
+const { userData } = storeToRefs(useStore);
+const { handleLoading } = appStore;
+
+const optionsAndAnswerDragList: Ref<AnswerProps[][]> = ref([[...taskInfos.taskAnswers], []]);
+
+const reset = () => (optionsAndAnswerDragList.value = [[...taskInfos.taskAnswers], []]);
+
+const startDrag = (event: DragEvent, item: AnswerProps) => {
+  event.dataTransfer!.dropEffect = "move";
+  event.dataTransfer!.effectAllowed = "move";
+  event.dataTransfer!.setData("itemID", item.answerId.toString());
+};
+
+const onDrop = (event: DragEvent, listIndex: number) => {
+  const itemID = event.dataTransfer!.getData("itemID");
+  const item = optionsAndAnswerDragList.value[listIndex === 0 ? 1 : 0].find(
+    (item) => item.answerId === Number(itemID)
+  );
+  const lastIndex = optionsAndAnswerDragList.value[listIndex === 0 ? 1 : 0].findIndex(
+    (item) => item.answerId == Number(itemID)
+  );
+
+  if (listIndex === 1 && !!optionsAndAnswerDragList.value[1].length) {
+    optionsAndAnswerDragList.value[0].push(optionsAndAnswerDragList.value[1][0]);
+    optionsAndAnswerDragList.value[1].shift();
+  }
+
+  item && optionsAndAnswerDragList.value[listIndex].push(item);
+
+  item &&
+    !!lastIndex.toString() &&
+    optionsAndAnswerDragList.value[listIndex === 0 ? 1 : 0].splice(lastIndex, 1);
+};
+
+const handleCorrectAnswer = (levelup: boolean, level: number, exp: number) => {
+  userData.value.userExp = exp;
+  userData.value.userExp = level;
+
+  router.push({ name: "module", params: { moduleId: router.currentRoute.value.params.moduleId } });
+};
+
+const handleIncorrectAnswer = (lifes: number) => {
+  userData.value.lifes = lifes;
+};
+
+const answerQuestion = async () => {
+  handleLoading(true);
+
+  try {
+    const response = await answerQuestionService({
+      answerId: optionsAndAnswerDragList.value[1][0].answerId.toString(),
+      taskId: optionsAndAnswerDragList.value[1][0].taskId.toString()
+    });
+
+    if (response.data.acertou) {
+      handleCorrectAnswer(response.data.subiuNivel, response.data.user_level, response.data.exp);
+      return;
+    }
+
+    handleIncorrectAnswer(response.data.vidas);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    reset();
+    handleLoading(false);
+  }
+};
+
+const handleScronOnDrag = (e: DragEvent) => {
+  const margin = 100;
+  const step = 6;
+
+  const mouseY: number = e.clientY;
+  const windowHeight = window.innerHeight;
+  const scrollTop = window.scrollY;
+
+  if (mouseY < margin && scrollTop > 0) {
+    window.scrollTo(0, scrollTop - step);
+    return;
+  }
+
+  if (windowHeight - mouseY < margin) {
+    window.scrollTo(0, scrollTop + step);
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("dragover", handleScronOnDrag);
 });
 
-const isDragging = ref(false);
-const handleIsDragging = (value: boolean) => (isDragging.value = value);
-
-const answerQuestion = () => {
-  console.log(question.value.options);
-};
-
-const dragOptions = {
-  animation: 0,
-  group: "description",
-  disabled: false,
-  ghostClass: "ghost"
-};
+onUnmounted(() => {
+  window.removeEventListener("dragover", handleScronOnDrag);
+});
 </script>
 
 <style lang="scss">
@@ -92,6 +178,7 @@ const dragOptions = {
   .draggable-task__task {
     font-size: 14px;
     line-height: normal;
+    width: 100%;
   }
 
   .helper-text {
@@ -101,20 +188,38 @@ const dragOptions = {
   }
 
   .draggable-task__options {
-    margin-top: 48px;
+    margin: 48px 0 36px;
     display: flex;
     flex-direction: column;
+    gap: 16px;
 
-    .list-group {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-bottom: 36px;
-      .list-group-item {
-        .image-option {
-          height: 350px;
-          width: 350px;
-        }
+    .drag-el {
+      min-height: 200px;
+      width: 320px;
+
+      img {
+        max-width: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+
+  .draggable-task__drop-zone {
+    width: 320px;
+    min-height: 200px;
+    border: 3px solid #fee500;
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+
+    .drag-el {
+      width: 100%;
+      height: 100%;
+
+      img {
+        max-width: 100%;
+        object-fit: cover;
+        border-radius: 8px;
       }
     }
   }

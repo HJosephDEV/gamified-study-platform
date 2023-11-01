@@ -19,10 +19,10 @@ export type TaskInfosProps = {
   task: TaskProps;
 };
 
-export type MultipleChoiceProps = {
+export type TaskComponentProps = {
   taskInfos: TaskProps;
 };
 
 export type TaskCardProps = {
-  title: string;
+  title?: string;
 };

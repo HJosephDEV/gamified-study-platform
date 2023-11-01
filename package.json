@@ -16,7 +16,6 @@
     "pinia": "^2.1.6",
     "vite-svg-loader": "^4.0.0",
     "vue": "^3.3.4",
-    "vue-draggable-next": "^2.2.1",
     "vue-router": "^4.2.4"
   },
   "devDependencies": {

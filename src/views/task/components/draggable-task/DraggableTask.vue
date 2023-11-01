@@ -17,8 +17,10 @@
           v-for="option in optionsAndAnswerDragList[0]"
           :key="option.id"
           class="drag-el"
-          draggable="true"
-          @dragstart="startDrag($event, option)"
+          @dragstart="
+            startDrag($event, option);
+            addMouseMoveListener();
+          "
         >
           <img
             :src="option.image"
@@ -53,7 +55,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 import TaskCard from "../task-card/TaskCard.vue";
 import AppButton from "@/components/app-button/AppButton.vue";
@@ -83,6 +85,8 @@ const optionsAndAnswerDragList = ref([
   ],
   []
 ]);
+
+const addMouseMoveListener = () => {};
 
 const startDrag = (event: DragEvent, item: { id: number; image: string }) => {
   event.dataTransfer!.dropEffect = "move";
@@ -114,6 +118,25 @@ const onDrop = (event: DragEvent, listIndex: number) => {
 const answerQuestion = () => {
   console.log(optionsAndAnswerDragList.value[1][0]);
 };
+
+onMounted(() => {
+  window.addEventListener("drag", (e) => {
+    const margin = 100;
+    const step = 10;
+
+    const mouseY: number = e.clientY;
+    const windowHeight = window.innerHeight;
+    const scrollTop = window.scrollY;
+
+    if (mouseY < margin && scrollTop > 0) {
+      window.scrollTo(0, scrollTop - step);
+    }
+
+    if (windowHeight - mouseY < margin) {
+      window.scrollTo(0, scrollTop + step);
+    }
+  });
+});
 </script>
 
 <style lang="scss">

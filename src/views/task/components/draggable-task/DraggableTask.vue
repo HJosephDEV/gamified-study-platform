@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 
 import TaskCard from "../task-card/TaskCard.vue";
 import AppButton from "@/components/app-button/AppButton.vue";
@@ -119,23 +119,30 @@ const answerQuestion = () => {
   console.log(optionsAndAnswerDragList.value[1][0]);
 };
 
+const handleScronOnDrag = (e: DragEvent) => {
+  const margin = 100;
+  const step = 6;
+
+  const mouseY: number = e.clientY;
+  const windowHeight = window.innerHeight;
+  const scrollTop = window.scrollY;
+
+  if (mouseY < margin && scrollTop > 0) {
+    window.scrollTo(0, scrollTop - step);
+    return;
+  }
+
+  if (windowHeight - mouseY < margin) {
+    window.scrollTo(0, scrollTop + step);
+  }
+};
+
 onMounted(() => {
-  window.addEventListener("drag", (e) => {
-    const margin = 100;
-    const step = 10;
+  window.addEventListener("dragover", handleScronOnDrag);
+});
 
-    const mouseY: number = e.clientY;
-    const windowHeight = window.innerHeight;
-    const scrollTop = window.scrollY;
-
-    if (mouseY < margin && scrollTop > 0) {
-      window.scrollTo(0, scrollTop - step);
-    }
-
-    if (windowHeight - mouseY < margin) {
-      window.scrollTo(0, scrollTop + step);
-    }
-  });
+onUnmounted(() => {
+  window.removeEventListener("dragover", handleScronOnDrag);
 });
 </script>
 

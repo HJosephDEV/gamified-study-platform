@@ -17,10 +17,7 @@
           v-for="option in optionsAndAnswerDragList[0]"
           :key="option.answerId"
           class="drag-el"
-          @dragstart="
-            startDrag($event, option);
-            addMouseMoveListener();
-          "
+          @dragstart="startDrag($event, option)"
         >
           <img
             :src="option.answerDescription"
@@ -55,17 +52,28 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref, type Ref } from "vue";
+import { storeToRefs } from "pinia";
+import router from "@/router";
+
+import type { AnswerProps, TaskComponentProps } from "@/@types/views/Task";
+import { useAppStore } from "@/stores/AppStore";
+import { answerQuestionService } from "@/services/task/service";
 
 import TaskCard from "../task-card/TaskCard.vue";
 import AppButton from "@/components/app-button/AppButton.vue";
-import type { AnswerProps, TaskComponentProps } from "@/@types/views/Task";
+import { useUserStore } from "@/stores/UserStore";
 
 const { taskInfos } = defineProps<TaskComponentProps>();
 
-const optionsAndAnswerDragList = ref([[...taskInfos.taskAnswers], []]);
+const appStore = useAppStore();
+const useStore = useUserStore();
+const { userData } = storeToRefs(useStore);
+const { handleLoading } = appStore;
 
-const addMouseMoveListener = () => {};
+const optionsAndAnswerDragList: Ref<AnswerProps[][]> = ref([[...taskInfos.taskAnswers], []]);
+
+const reset = () => (optionsAndAnswerDragList.value = [[...taskInfos.taskAnswers], []]);
 
 const startDrag = (event: DragEvent, item: AnswerProps) => {
   event.dataTransfer!.dropEffect = "move";
@@ -94,8 +102,38 @@ const onDrop = (event: DragEvent, listIndex: number) => {
     optionsAndAnswerDragList.value[listIndex === 0 ? 1 : 0].splice(lastIndex, 1);
 };
 
-const answerQuestion = () => {
-  console.log(optionsAndAnswerDragList.value[1][0]);
+const handleCorrectAnswer = (levelup: boolean, level: number, exp: number) => {
+  userData.value.userExp = exp;
+  userData.value.userExp = level;
+
+  router.push({ name: "module", params: { moduleId: router.currentRoute.value.params.moduleId } });
+};
+
+const handleIncorrectAnswer = (lifes: number) => {
+  userData.value.lifes = lifes;
+};
+
+const answerQuestion = async () => {
+  handleLoading(true);
+
+  try {
+    const response = await answerQuestionService({
+      answerId: optionsAndAnswerDragList.value[1][0].answerId.toString(),
+      taskId: optionsAndAnswerDragList.value[1][0].taskId.toString()
+    });
+
+    if (response.data.acertou) {
+      handleCorrectAnswer(response.data.subiuNivel, response.data.user_level, response.data.exp);
+      return;
+    }
+
+    handleIncorrectAnswer(response.data.vidas);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    reset();
+    handleLoading(false);
+  }
 };
 
 const handleScronOnDrag = (e: DragEvent) => {

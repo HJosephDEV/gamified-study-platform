@@ -21,27 +21,49 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import { useAppStore } from "@/stores/AppStore";
-import MultipleChoiceOption from "../multiple-choice-option/MultipleChoiceOption.vue";
-import TaskCard from "../task-card/TaskCard.vue";
+import { storeToRefs } from "pinia";
+import router from "@/router";
+
 import type { TaskComponentProps } from "@/@types/views/Task";
 import { answerQuestionService } from "@/services/task/service";
+import { useUserStore } from "@/stores/UserStore";
+import { useAppStore } from "@/stores/AppStore";
+
+import MultipleChoiceOption from "../multiple-choice-option/MultipleChoiceOption.vue";
+import TaskCard from "../task-card/TaskCard.vue";
 
 const appStore = useAppStore();
+const userStore = useUserStore();
+const { userData } = storeToRefs(userStore);
 const { handleLoading } = appStore;
 
 const { taskInfos } = defineProps<TaskComponentProps>();
 
 const taskContentFull = ref("");
 
-const handleCorrectAnswer = (answer: string, levelup: boolean, exp: number) => {
-  taskContentFull.value = answer;
+const redirectToTasks = () =>
+  router.push({
+    name: "module",
+    params: { moduleId: router.currentRoute.value.params.moduleId }
+  });
 
-  setTimeout(() => {}, 3000);
+const handleCorrectAnswer = (answer: string, levelup: boolean, level: number, exp: number) => {
+  taskContentFull.value = answer;
+  userData.value.userExp = exp;
+  userData.value.userLevel = level;
+
+  if (taskInfos.taskType === 0) {
+    redirectToTasks();
+    return;
+  }
+
+  setTimeout(() => {
+    redirectToTasks();
+  }, 3000);
 };
 
 const handleIncorrectAnswer = (lifes: number) => {
-  console.log(lifes);
+  userData.value.lifes = lifes;
 };
 
 const answerQuestion = async (answerId: number, taskId: number) => {
@@ -54,7 +76,12 @@ const answerQuestion = async (answerId: number, taskId: number) => {
     });
 
     if (response.data.acertou) {
-      handleCorrectAnswer(response.data.resposta, response.data.subiuNivel, response.data.exp);
+      handleCorrectAnswer(
+        response.data.resposta,
+        response.data.subiuNivel,
+        response.data.user_level,
+        response.data.exp
+      );
       return;
     }
 

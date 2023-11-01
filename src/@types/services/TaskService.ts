@@ -37,6 +37,7 @@ type AnswerResponse = {
   subiuNivel: boolean;
   vidas: never;
   resposta: string;
+  user_level: number;
 };
 
 export type POSTAnswerQuestion = {

@@ -5,34 +5,9 @@
         {{ question.statement }}
       </div>
 
-      <span class="helper-text">Arraste os itens para as posições corretas</span>
+      <span class="helper-text">Arraste os itens para a área amarela</span>
 
-      <div class="draggable-task__options">
-        <VueDraggableNext
-          class="list-group"
-          tag="ul"
-          :list="question.options"
-          v-bind="dragOptions"
-          @start="handleIsDragging(true)"
-          @end="handleIsDragging(false)"
-        >
-          <transition-group
-            type="transition"
-            name="flip-list"
-          >
-            <li
-              v-for="answer in question.options"
-              :key="answer.id"
-              class="list-group-item"
-            >
-              <img
-                :src="answer.image"
-                class="image-option"
-              />
-            </li>
-          </transition-group>
-        </VueDraggableNext>
-      </div>
+      <div class="draggable-task__options"></div>
 
       <AppButton @click="answerQuestion">Responder</AppButton>
     </div>
@@ -41,7 +16,6 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import { VueDraggableNext } from "vue-draggable-next";
 
 import TaskCard from "../task-card/TaskCard.vue";
 import AppButton from "@/components/app-button/AppButton.vue";

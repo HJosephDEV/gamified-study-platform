@@ -7,7 +7,45 @@
 
       <span class="helper-text">Arraste os itens para a área amarela</span>
 
-      <div class="draggable-task__options"></div>
+      <div
+        class="draggable-task__options"
+        @drop="onDrop($event, 0)"
+        @dragover.prevent
+        @dragenter.prevent
+      >
+        <div
+          v-for="option in optionsAndAnswerDragList[0]"
+          :key="option.id"
+          class="drag-el"
+          draggable="true"
+          @dragstart="startDrag($event, option)"
+        >
+          <img
+            :src="option.image"
+            alt="opção"
+          />
+        </div>
+      </div>
+
+      <div
+        class="draggable-task__drop-zone"
+        @drop="onDrop($event, 1)"
+        @dragover.prevent
+        @dragenter.prevent
+      >
+        <div
+          v-for="option in optionsAndAnswerDragList[1]"
+          :key="option.id"
+          class="drag-el"
+          draggable="true"
+          @dragstart="startDrag($event, option)"
+        >
+          <img
+            :src="option.image"
+            alt="opção"
+          />
+        </div>
+      </div>
 
       <AppButton @click="answerQuestion">Responder</AppButton>
     </div>
@@ -36,18 +74,45 @@ const question = ref({
   ]
 });
 
-const isDragging = ref(false);
-const handleIsDragging = (value: boolean) => (isDragging.value = value);
+const optionsAndAnswerDragList = ref([
+  [
+    { id: 1, image: "/src/assets/images/pixel-art.png" },
+    { id: 2, image: "/src/assets/images/pixel-art.png" },
+    { id: 3, image: "/src/assets/images/pixel-art.png" },
+    { id: 4, image: "/src/assets/images/pixel-art.png" }
+  ],
+  []
+]);
 
-const answerQuestion = () => {
-  console.log(question.value.options);
+const startDrag = (event: DragEvent, item: { id: number; image: string }) => {
+  event.dataTransfer!.dropEffect = "move";
+  event.dataTransfer!.effectAllowed = "move";
+  event.dataTransfer!.setData("itemID", item.id.toString());
 };
 
-const dragOptions = {
-  animation: 0,
-  group: "description",
-  disabled: false,
-  ghostClass: "ghost"
+const onDrop = (event: DragEvent, listIndex: number) => {
+  const itemID = event.dataTransfer!.getData("itemID");
+  const item = optionsAndAnswerDragList.value[listIndex === 0 ? 1 : 0].find(
+    (item) => item.id === Number(itemID)
+  );
+  const lastIndex = optionsAndAnswerDragList.value[listIndex === 0 ? 1 : 0].findIndex(
+    (item) => item.id == Number(itemID)
+  );
+
+  if (listIndex === 1 && !!optionsAndAnswerDragList.value[1].length) {
+    optionsAndAnswerDragList.value[0].push(optionsAndAnswerDragList.value[1][0]);
+    optionsAndAnswerDragList.value[1].shift();
+  }
+
+  item && optionsAndAnswerDragList.value[listIndex].push(item);
+
+  item &&
+    !!lastIndex.toString() &&
+    optionsAndAnswerDragList.value[listIndex === 0 ? 1 : 0].splice(lastIndex, 1);
+};
+
+const answerQuestion = () => {
+  console.log(optionsAndAnswerDragList.value[1][0]);
 };
 </script>
 
@@ -75,20 +140,38 @@ const dragOptions = {
   }
 
   .draggable-task__options {
-    margin-top: 48px;
+    margin: 48px 0 36px;
     display: flex;
     flex-direction: column;
+    gap: 16px;
 
-    .list-group {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-bottom: 36px;
-      .list-group-item {
-        .image-option {
-          height: 350px;
-          width: 350px;
-        }
+    .drag-el {
+      min-height: 200px;
+      width: 320px;
+
+      img {
+        max-width: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+
+  .draggable-task__drop-zone {
+    width: 320px;
+    min-height: 200px;
+    border: 3px solid #fee500;
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+
+    .drag-el {
+      width: 100%;
+      height: 100%;
+
+      img {
+        max-width: 100%;
+        object-fit: cover;
+        border-radius: 8px;
       }
     }
   }

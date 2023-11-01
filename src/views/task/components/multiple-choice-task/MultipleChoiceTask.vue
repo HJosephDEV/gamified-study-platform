@@ -20,17 +20,17 @@
 </template>
 
 <script lang="ts" setup>
-import { onUnmounted, ref } from "vue";
+import { ref } from "vue";
 import { useAppStore } from "@/stores/AppStore";
 import MultipleChoiceOption from "../multiple-choice-option/MultipleChoiceOption.vue";
 import TaskCard from "../task-card/TaskCard.vue";
-import type { MultipleChoiceProps } from "@/@types/views/Task";
+import type { TaskComponentProps } from "@/@types/views/Task";
 import { answerQuestionService } from "@/services/task/service";
 
 const appStore = useAppStore();
 const { handleLoading } = appStore;
 
-const { taskInfos } = defineProps<MultipleChoiceProps>();
+const { taskInfos } = defineProps<TaskComponentProps>();
 
 const taskContentFull = ref("");
 
@@ -75,6 +75,7 @@ const answerQuestion = async (answerId: number, taskId: number) => {
   .multiple-choice-task__task {
     font-size: 14px;
     line-height: normal;
+    width: 100%;
   }
 
   .multiple-choice-task__options {

@@ -1,8 +1,8 @@
 <template>
-  <TaskCard>
+  <TaskCard :title="taskInfos.taskName">
     <div class="draggable-task__container">
       <div class="draggable-task__task">
-        {{ question.statement }}
+        {{ taskInfos.taskContent }}
       </div>
 
       <span class="helper-text">Arraste os itens para a área amarela</span>
@@ -15,7 +15,7 @@
       >
         <div
           v-for="option in optionsAndAnswerDragList[0]"
-          :key="option.id"
+          :key="option.answerId"
           class="drag-el"
           @dragstart="
             startDrag($event, option);
@@ -23,7 +23,7 @@
           "
         >
           <img
-            :src="option.image"
+            :src="option.answerDescription"
             alt="opção"
           />
         </div>
@@ -37,13 +37,13 @@
       >
         <div
           v-for="option in optionsAndAnswerDragList[1]"
-          :key="option.id"
+          :key="option.answerId"
           class="drag-el"
           draggable="true"
           @dragstart="startDrag($event, option)"
         >
           <img
-            :src="option.image"
+            :src="option.answerDescription"
             alt="opção"
           />
         </div>
@@ -59,48 +59,27 @@ import { onMounted, onUnmounted, ref } from "vue";
 
 import TaskCard from "../task-card/TaskCard.vue";
 import AppButton from "@/components/app-button/AppButton.vue";
+import type { AnswerProps, TaskComponentProps } from "@/@types/views/Task";
 
-const question = ref({
-  statement: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-          been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
-          galley of type and scrambled it to $answer - $answer - $answer a type specimen book. It has survived not only five
-          centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-          It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum
-          passages, and more recently with desktop publishing software like Aldus PageMaker including
-          versions of Lorem Ipsum.`,
-  options: [
-    { id: 1, image: "/src/assets/images/pixel-art.png" },
-    { id: 2, image: "/src/assets/images/pixel-art.png" },
-    { id: 3, image: "/src/assets/images/pixel-art.png" },
-    { id: 4, image: "/src/assets/images/pixel-art.png" }
-  ]
-});
+const { taskInfos } = defineProps<TaskComponentProps>();
 
-const optionsAndAnswerDragList = ref([
-  [
-    { id: 1, image: "/src/assets/images/pixel-art.png" },
-    { id: 2, image: "/src/assets/images/pixel-art.png" },
-    { id: 3, image: "/src/assets/images/pixel-art.png" },
-    { id: 4, image: "/src/assets/images/pixel-art.png" }
-  ],
-  []
-]);
+const optionsAndAnswerDragList = ref([[...taskInfos.taskAnswers], []]);
 
 const addMouseMoveListener = () => {};
 
-const startDrag = (event: DragEvent, item: { id: number; image: string }) => {
+const startDrag = (event: DragEvent, item: AnswerProps) => {
   event.dataTransfer!.dropEffect = "move";
   event.dataTransfer!.effectAllowed = "move";
-  event.dataTransfer!.setData("itemID", item.id.toString());
+  event.dataTransfer!.setData("itemID", item.answerId.toString());
 };
 
 const onDrop = (event: DragEvent, listIndex: number) => {
   const itemID = event.dataTransfer!.getData("itemID");
   const item = optionsAndAnswerDragList.value[listIndex === 0 ? 1 : 0].find(
-    (item) => item.id === Number(itemID)
+    (item) => item.answerId === Number(itemID)
   );
   const lastIndex = optionsAndAnswerDragList.value[listIndex === 0 ? 1 : 0].findIndex(
-    (item) => item.id == Number(itemID)
+    (item) => item.answerId == Number(itemID)
   );
 
   if (listIndex === 1 && !!optionsAndAnswerDragList.value[1].length) {
@@ -161,6 +140,7 @@ onUnmounted(() => {
   .draggable-task__task {
     font-size: 14px;
     line-height: normal;
+    width: 100%;
   }
 
   .helper-text {

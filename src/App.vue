@@ -14,8 +14,10 @@ import { useAppStore } from "./stores/AppStore";
 
 import AppModal from "@/components/app-modal/AppModal.vue";
 import AppLoading from "@/components/app-loading/AppLoading.vue";
+import { storeToRefs } from "pinia";
 
-const { showLoading, showModal } = useAppStore();
+const appStore = useAppStore();
+const { showLoading, showModal } = storeToRefs(appStore);
 </script>
 
 <style lang="scss" scoped></style>

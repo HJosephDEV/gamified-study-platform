@@ -5,17 +5,11 @@ import type { ModalInfosProps } from "@/@types/stores/AppStore";
 export const useAppStore = defineStore("appStore", () => {
   const showLoading = ref(false);
   const showModal = ref(false);
-  const modalInfos: Ref<ModalInfosProps> = ref({
-    title: "",
-    subtitle: "",
-    text: "",
-    textGreenButton: "",
-    textRedButton: "",
-    eventGreenButton: () => {},
-    eventRedButton: () => {}
-  });
+  const modalInfos: Ref<ModalInfosProps> = ref({} as ModalInfosProps);
 
   const handleModal = (params: ModalInfosProps) => {
+    showModal.value = params?.active || false;
+
     modalInfos.value = {
       ...params,
       eventGreenButton: params?.eventGreenButton || (() => {}),

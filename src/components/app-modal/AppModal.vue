@@ -2,28 +2,28 @@
   <div class="app-modal__backdrop">
     <div class="app-modal__modal">
       <div class="app-modal__content">
-        <h3 v-if="!!title">{{ title }}</h3>
+        <h3 v-if="!!modalInfos.title">{{ modalInfos.title }}</h3>
 
-        <h4 v-if="!!subtitle">{{ subtitle }}</h4>
+        <h4 v-if="!!modalInfos.subtitle">{{ modalInfos.subtitle }}</h4>
 
-        <p v-if="!!text">
-          {{ text }}
+        <p v-if="!!modalInfos.text">
+          {{ modalInfos.text }}
         </p>
 
         <div class="app-modal__buttons">
           <AppButton
-            v-if="!!textGreenButton"
+            v-if="!!modalInfos.textGreenButton"
             is-full
-            @click="eventGreenButton"
+            @click="modalInfos.eventGreenButton"
           >
-            {{ textGreenButton }}
+            {{ modalInfos.textGreenButton }}
           </AppButton>
           <AppButton
-            v-if="!!textRedButton"
+            v-if="!!modalInfos.textRedButton"
             is-full
-            @click="eventRedButton"
+            @click="modalInfos.eventRedButton"
           >
-            {{ textRedButton }}
+            {{ modalInfos.textRedButton }}
           </AppButton>
         </div>
       </div>
@@ -32,21 +32,32 @@
 </template>
 
 <script lang="ts" setup>
+import { onUnmounted, watch, ref, type Ref } from "vue";
 import { useAppStore } from "@/stores/AppStore";
 import AppButton from "../app-button/AppButton.vue";
+import { storeToRefs } from "pinia";
 
 const appStore = useAppStore();
-const {
-  modalInfos: {
-    title,
-    subtitle,
-    text,
-    textGreenButton,
-    textRedButton,
-    eventGreenButton,
-    eventRedButton
+const { handleModal } = appStore;
+const { modalInfos } = storeToRefs(appStore);
+
+const closeByTime: Ref<null | number> = ref(null);
+
+const handleCloseByTime = (time: number) =>
+  (closeByTime.value = setTimeout(() => {
+    handleModal({ active: false });
+  }, time));
+
+watch(
+  () => modalInfos.value.timeClose,
+  (value) => {
+    !!value?.toString() && handleCloseByTime(value);
   }
-} = appStore;
+);
+
+onUnmounted(() => {
+  !!closeByTime.value?.toString() && clearInterval(closeByTime.value);
+});
 </script>
 
 <style lang="scss" scoped>

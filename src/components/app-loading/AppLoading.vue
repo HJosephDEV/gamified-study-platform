@@ -1,6 +1,6 @@
 <template>
   <div class="app-loading__backdrop">
-    <img src="/src/assets/svgs/infinity.svg" />
+    <img src="/assets/svgs/infinity.svg" />
   </div>
 </template>
 

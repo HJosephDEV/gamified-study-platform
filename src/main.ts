@@ -1,5 +1,5 @@
-import "./assets/scss/reset.scss";
-import "./assets/scss/main.scss";
+import "../public/assets/scss/reset.scss";
+import "../public/assets/scss/main.scss";
 
 import type { ProviderAppProps } from "./@types/providers/App";
 

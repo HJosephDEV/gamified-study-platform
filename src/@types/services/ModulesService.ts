@@ -39,3 +39,17 @@ export type GETModuleTasks = {
 export type GETModuleTasksParams = {
   id_module: string;
 };
+
+export type POSTModules = {
+  message: string;
+  data: {
+    id: number;
+    nome: string;
+    descricao: string;
+  };
+};
+
+export type POSTModulesPayload = {
+  nome: string;
+  descricao: string;
+};

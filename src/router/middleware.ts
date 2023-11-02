@@ -41,6 +41,11 @@ const getUser = async () => {
     const response = await getUserService();
     saveUserData(response.data);
   } catch (error) {
+    // @ts-ignore
+    if (error.response.status === 401) {
+      localStorage.clear();
+      router.push({ name: "login" });
+    }
     console.error(error);
   } finally {
     handleLoading(false);
@@ -53,8 +58,12 @@ router.beforeEach(async (to, from, next) => {
 
   const isLoggedUser = checkAuthenticationUser(localStorage.getItem("token"));
   const authenticationPages = ["login", "register"];
+  const adminPages = ["registerModules", "registerActivities", "registerAvatars"];
 
   !Object.keys(userData.value).length && isLoggedUser && (await getUser());
+
+  if (!userData.value.isAdmin && adminPages.includes(to.name?.toString() || ""))
+    return next({ name: "dashboard" });
 
   if (!isLoggedUser && !authenticationPages.includes(to.name?.toString() || ""))
     return next({ name: "login" });

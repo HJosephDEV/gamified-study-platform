@@ -92,6 +92,7 @@ const checkUsername = (registerFieldsParam: RegisterFields, key: string) => {
 
   return isValidUsername;
 };
+
 const validateFields = () => {
   let isValid = true;
   for (const key in registerFields.value) {

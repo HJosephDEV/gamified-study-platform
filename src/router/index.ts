@@ -6,6 +6,7 @@ import SettingsView from "@/views/settings/SettingsView.vue";
 import TasksView from "@/views/tasks/TasksView.vue";
 import TaskView from "@/views/task/TaskView.vue";
 import LoggedLayout from "@/layouts/logged-layout/LoggedLayout.vue";
+import RegisterModulesView from "@/views/register-modules/RegisterModulesView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -46,6 +47,30 @@ const routes: Array<RouteRecordRaw> = [
     path: "/module/:moduleId/task/:taskId",
     name: "task",
     component: TaskView,
+    meta: {
+      layout: LoggedLayout
+    }
+  },
+  {
+    path: "/register-modules",
+    name: "registerModules",
+    component: RegisterModulesView,
+    meta: {
+      layout: LoggedLayout
+    }
+  },
+  {
+    path: "/register-activities",
+    name: "registerActivities",
+    component: RegisterModulesView,
+    meta: {
+      layout: LoggedLayout
+    }
+  },
+  {
+    path: "/register-avatars",
+    name: "registerAvatars",
+    component: RegisterModulesView,
     meta: {
       layout: LoggedLayout
     }

@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="section-module__container"
-    @click="redirectToModule(moduleId)"
-  >
+  <div class="section-module__container">
     <span>{{ moduleName }}</span>
     <Code2 class="section-module__icon" />
   </div>
@@ -10,19 +7,9 @@
 
 <script lang="ts" setup>
 import type { SectionModuleProps } from "@/@types/components/SectionModule";
-import router from "@/router";
 import { Code2 } from "lucide-vue-next";
 
-const { moduleId, moduleName } = defineProps<SectionModuleProps>();
-
-const redirectToModule = (id: number) => {
-  router.push({
-    name: "module",
-    params: {
-      moduleId: id
-    }
-  });
-};
+const { moduleName } = defineProps<SectionModuleProps>();
 </script>
 
 <style lang="scss">

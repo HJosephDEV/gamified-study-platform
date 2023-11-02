@@ -7,8 +7,8 @@
         <SectionModule
           v-for="(module, index) in modules"
           :key="`module-in-progress-${index}`"
-          :module-id="module.id"
           :module-name="module.name"
+          @click="redirectToModule(module.id)"
         />
       </div>
       <!-- 
@@ -18,12 +18,23 @@
 </template>
 
 <script lang="ts" setup>
+import router from "@/router";
+
 import type { ModulesSectionProps } from "@/@types/views/Dashboard";
 
-import SectionModule from "./SectionModule.vue";
+import SectionModule from "@/components/section-module/SectionModule.vue";
 // import AppButton from "@/components/app-button/AppButton.vue";
 
 const { sectionTitle, modules } = defineProps<ModulesSectionProps>();
+
+const redirectToModule = (id: number) => {
+  router.push({
+    name: "module",
+    params: {
+      moduleId: id
+    }
+  });
+};
 </script>
 
 <style lang="scss" scoped>

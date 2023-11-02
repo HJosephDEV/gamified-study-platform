@@ -28,18 +28,7 @@ import type { TaskInfosProps } from "@/@types/views/Task";
 const appStore = useAppStore();
 const { handleLoading } = appStore;
 
-const taskInfos: Ref<TaskInfosProps> = ref({
-  moduleId: 0,
-  moduleName: "",
-  completedPercentage: 0,
-  task: {
-    taskId: 0,
-    taskName: "",
-    taskContent: "",
-    taskType: 0,
-    taskAnswers: []
-  }
-});
+const taskInfos: Ref<TaskInfosProps> = ref({} as TaskInfosProps);
 
 const getTask = async () => {
   const taskId = router.currentRoute.value.params.taskId.toString();
@@ -73,8 +62,8 @@ const getTask = async () => {
   }
 };
 
-onMounted(() => {
-  getTask();
+onMounted(async () => {
+  await getTask();
 });
 </script>
 

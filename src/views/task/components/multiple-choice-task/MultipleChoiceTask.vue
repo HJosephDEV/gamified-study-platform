@@ -59,7 +59,7 @@ const handleCorrectAnswer = (answer: string, levelup: boolean, level: number, ex
       active: true,
       title: "Você acertou!",
       text: "parabéns pelo empenho :)",
-      timeClose: 5000
+      timeClose: 3500
     });
 
     levelup &&
@@ -67,12 +67,12 @@ const handleCorrectAnswer = (answer: string, levelup: boolean, level: number, ex
         handleModal({
           active: true,
           title: "Você subiu de level!",
-          text: "Parabéns pela conquista :)",
-          timeClose: 5000
+          text: `Parabéns pela conquista de ter alcançado o level ${level} :)`,
+          timeClose: 3500
         });
 
         redirectToTasks();
-      }, 5000);
+      }, 3500);
 
     !levelup && redirectToTasks();
     return;
@@ -85,7 +85,7 @@ const handleCorrectAnswer = (answer: string, levelup: boolean, level: number, ex
       active: true,
       title: "Você acertou!",
       text: "parabéns pelo empenho :)",
-      timeClose: 5000
+      timeClose: 3500
     });
 
     levelup &&
@@ -93,13 +93,13 @@ const handleCorrectAnswer = (answer: string, levelup: boolean, level: number, ex
         handleModal({
           active: true,
           title: "Você subiu de level!",
-          text: "Parabéns pela conquista :)",
-          timeClose: 5000
+          text: `Parabéns pela conquista de ter alcançado o level ${level} :)`,
+          timeClose: 3500
         });
 
         blocked.value = false;
         redirectToTasks();
-      }, 5000);
+      }, 3500);
 
     !levelup && redirectToTasks();
   }, 2000);
@@ -112,7 +112,7 @@ const handleIncorrectAnswer = (lifes: number) => {
     active: true,
     title: "Você errou :(",
     text: "Por consequência, você perdeu uma vida!",
-    timeClose: 5000
+    timeClose: 3500
   });
 };
 

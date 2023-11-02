@@ -110,8 +110,8 @@ const handleCorrectAnswer = (levelup: boolean, level: number, exp: number) => {
     handleModal({
       active: true,
       title: "Você subiu de level!",
-      text: "Parabéns pela conquista :)",
-      timeClose: 5000
+      text: `Parabéns pela conquista de ter alcançado o level ${level} :)`,
+      timeClose: 3500
     });
 
   router.push({ name: "module", params: { moduleId: router.currentRoute.value.params.moduleId } });
@@ -123,7 +123,7 @@ const handleIncorrectAnswer = (lifes: number) => {
     active: true,
     title: "Você errou :(",
     text: "Por consequência, você perdeu uma vida!",
-    timeClose: 5000
+    timeClose: 3500
   });
 };
 

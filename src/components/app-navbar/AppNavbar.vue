@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import router from "@/router";
 
 import { Heart } from "lucide-vue-next";
@@ -47,6 +47,21 @@ const optionList = ref([
   { label: "Configurações", event: () => router.push({ name: "settings" }) },
   { label: "Sair", event: () => logout() }
 ]);
+
+const addAdminOptionsInDropdown = () => {
+  optionList.value = [
+    { label: "Meus módulos", event: () => router.push({ name: "dashboard" }) },
+    { label: "Configurações", event: () => router.push({ name: "settings" }) },
+    { label: "Cadastrar módulos", event: () => router.push({ name: "registerModules" }) },
+    { label: "Cadastrar atividades", event: () => router.push({ name: "registerModules" }) },
+    { label: "Cadastrar avatares", event: () => router.push({ name: "registerModules" }) },
+    { label: "Sair", event: () => logout() }
+  ];
+};
+
+onMounted(() => {
+  userData.isAdmin && addAdminOptionsInDropdown();
+});
 </script>
 
 <style lang="scss">

@@ -131,7 +131,7 @@ const goToNextStep = async () => {
   const isValid = validateFields();
   const isEmailAndLoginValid = await validateLoginAndEmail();
 
-  if (!isValid && !isEmailAndLoginValid) return;
+  if (!isValid || !isEmailAndLoginValid) return;
 
   changeStep(2);
 };

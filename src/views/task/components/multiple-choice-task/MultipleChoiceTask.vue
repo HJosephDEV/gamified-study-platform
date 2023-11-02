@@ -10,6 +10,7 @@
         <MultipleChoiceOption
           v-for="(answer, index) in taskInfos.taskAnswers"
           :key="`answer-${index}`"
+          :blocked="blocked"
           @click="answerQuestion(answer.answerId, taskInfos.taskId)"
         >
           {{ index + 1 }}) {{ answer.answerDescription }}
@@ -35,11 +36,12 @@ import TaskCard from "../task-card/TaskCard.vue";
 const appStore = useAppStore();
 const userStore = useUserStore();
 const { userData } = storeToRefs(userStore);
-const { handleLoading } = appStore;
+const { handleLoading, handleModal } = appStore;
 
 const { taskInfos } = defineProps<TaskComponentProps>();
 
 const taskContentFull = ref("");
+const blocked = ref(false);
 
 const redirectToTasks = () =>
   router.push({
@@ -53,20 +55,69 @@ const handleCorrectAnswer = (answer: string, levelup: boolean, level: number, ex
   userData.value.userLevel = level;
 
   if (taskInfos.taskType === 0) {
-    redirectToTasks();
+    handleModal({
+      active: true,
+      title: "Você acertou!",
+      text: "parabéns pelo empenho :)",
+      timeClose: 5000
+    });
+
+    levelup &&
+      setTimeout(() => {
+        handleModal({
+          active: true,
+          title: "Você subiu de level!",
+          text: "Parabéns pela conquista :)",
+          timeClose: 5000
+        });
+
+        redirectToTasks();
+      }, 5000);
+
+    !levelup && redirectToTasks();
     return;
   }
 
+  blocked.value = true;
+
   setTimeout(() => {
-    redirectToTasks();
-  }, 3000);
+    handleModal({
+      active: true,
+      title: "Você acertou!",
+      text: "parabéns pelo empenho :)",
+      timeClose: 5000
+    });
+
+    levelup &&
+      setTimeout(() => {
+        handleModal({
+          active: true,
+          title: "Você subiu de level!",
+          text: "Parabéns pela conquista :)",
+          timeClose: 5000
+        });
+
+        blocked.value = false;
+        redirectToTasks();
+      }, 5000);
+
+    !levelup && redirectToTasks();
+  }, 2000);
 };
 
 const handleIncorrectAnswer = (lifes: number) => {
   userData.value.lifes = lifes;
+
+  handleModal({
+    active: true,
+    title: "Você errou :(",
+    text: "Por consequência, você perdeu uma vida!",
+    timeClose: 5000
+  });
 };
 
 const answerQuestion = async (answerId: number, taskId: number) => {
+  if (blocked.value) return;
   handleLoading(true);
 
   try {

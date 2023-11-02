@@ -69,7 +69,7 @@ const { taskInfos } = defineProps<TaskComponentProps>();
 const appStore = useAppStore();
 const useStore = useUserStore();
 const { userData } = storeToRefs(useStore);
-const { handleLoading } = appStore;
+const { handleLoading, handleModal } = appStore;
 
 const optionsAndAnswerDragList: Ref<AnswerProps[][]> = ref([[...taskInfos.taskAnswers], []]);
 
@@ -106,11 +106,25 @@ const handleCorrectAnswer = (levelup: boolean, level: number, exp: number) => {
   userData.value.userExp = exp;
   userData.value.userExp = level;
 
+  levelup &&
+    handleModal({
+      active: true,
+      title: "Você subiu de level!",
+      text: "Parabéns pela conquista :)",
+      timeClose: 5000
+    });
+
   router.push({ name: "module", params: { moduleId: router.currentRoute.value.params.moduleId } });
 };
 
 const handleIncorrectAnswer = (lifes: number) => {
   userData.value.lifes = lifes;
+  handleModal({
+    active: true,
+    title: "Você errou :(",
+    text: "Por consequência, você perdeu uma vida!",
+    timeClose: 5000
+  });
 };
 
 const answerQuestion = async () => {

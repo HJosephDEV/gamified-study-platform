@@ -5,6 +5,8 @@ import type {
   ChangeAvatarProps,
   ChangeInfosPayload,
   ChangePasswordPayload,
+  POSTEmailOrLoginError,
+  POSTEmailOrLoginErrorPayload,
   GETRankingProps,
   GetLoginProps,
   LoginProps,
@@ -70,6 +72,17 @@ export const changeUserPasswordService = async (payload: ChangePasswordPayload):
 export const getRankingService = async (): Promise<GETRankingProps> => {
   try {
     const response = await api.get<GETRankingProps>("usuario/ranking");
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const getEmailOrLoginErrorService = async (
+  payload: POSTEmailOrLoginErrorPayload
+): Promise<POSTEmailOrLoginError> => {
+  try {
+    const response = await api.post<POSTEmailOrLoginError>("verificar-dados", payload);
     return response.data;
   } catch (error) {
     return Promise.reject(error);

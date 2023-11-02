@@ -40,8 +40,12 @@ import FormInput from "@/components/form-input/FormInput.vue";
 import AppButton from "@/components/app-button/AppButton.vue";
 import TextButton from "@/components/text-button/TextButton.vue";
 import { hasEspecialCaracter } from "../../../utils/index";
+import { getEmailOrLoginErrorService } from "@/services/user/service";
+import { useAppStore } from "@/stores/AppStore";
 
+const appStore = useAppStore();
 const store = useRegisterStore();
+const { handleLoading } = appStore;
 const { registerFields } = storeToRefs(store);
 const { changeStep } = store;
 
@@ -100,9 +104,34 @@ const validateFields = () => {
   return isValid;
 };
 
-const goToNextStep = () => {
+const validateLoginAndEmail = async () => {
+  const payload = {
+    email: registerFields.value.email.value.toLowerCase(),
+    login: registerFields.value.username.value.toLowerCase()
+  };
+
+  handleLoading(true);
+
+  try {
+    const response = await getEmailOrLoginErrorService(payload);
+    registerFields.value.email.feedback = response.email;
+    registerFields.value.email.status = !response.email;
+    registerFields.value.username.status = !response.login;
+    registerFields.value.username.feedback = response.login;
+
+    return !response.email && !response.login;
+  } catch (error) {
+    console.error(error);
+  } finally {
+    handleLoading(false);
+  }
+};
+
+const goToNextStep = async () => {
   const isValid = validateFields();
-  if (!isValid) return;
+  const isEmailAndLoginValid = await validateLoginAndEmail();
+
+  if (!isValid && !isEmailAndLoginValid) return;
 
   changeStep(2);
 };

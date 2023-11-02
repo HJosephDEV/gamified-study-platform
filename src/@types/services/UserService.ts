@@ -72,3 +72,13 @@ export type GETRankingProps = {
   message: string;
   data: RankingProps[];
 };
+
+export type POSTEmailOrLoginError = {
+  login: string;
+  email: string;
+};
+
+export type POSTEmailOrLoginErrorPayload = {
+  login: string;
+  email: string;
+};

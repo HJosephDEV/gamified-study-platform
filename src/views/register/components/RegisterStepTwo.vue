@@ -38,19 +38,22 @@
 </template>
 
 <script lang="ts" setup>
-import { inject, ref, computed, nextTick } from "vue";
+import { inject, ref, computed, nextTick, onMounted, type Ref } from "vue";
+import { storeToRefs } from "pinia";
 
+import type { ProfileProps } from "@/@types/components/CharacterModal";
 import type { ProviderAppProps } from "@/@types/providers/App";
+
+import { useUserStore } from "@/stores/UserStore";
 import { useAppStore } from "@/stores/AppStore";
 import { useRegisterStore } from "@/stores/RegisterStore";
+import type { UserProps } from "@/@types/services/UserService";
+import { getAvatarsService } from "@/services/avatar/service";
+import { loginUserService, registerUserService } from "@/services/user/service";
 
 import CharactersModal from "@/components/characters-modal/CharactersModal.vue";
 import AppButton from "@/components/app-button/AppButton.vue";
 import BackButton from "@/components/back-button/BackButton.vue";
-import { loginUserService, registerUserService } from "@/services/user/service";
-import { useUserStore } from "@/stores/UserStore";
-import { storeToRefs } from "pinia";
-import type { UserProps } from "@/@types/services/UserService";
 
 const { $router } = inject<ProviderAppProps>("app") || ({} as ProviderAppProps);
 
@@ -69,15 +72,26 @@ const handleCharacterModal = (action: string) => {
   opennedCharacterModal.value = action === "open";
 };
 
-const profileList = ref([
-  { id: 1, src: "/src/assets/images/poro.png", selected: true, blocked: false },
-  { id: 2, src: "/src/assets/images/poro.png", selected: false, blocked: false },
-  { id: 3, src: "/src/assets/images/poro.png", selected: false, blocked: false },
-  { id: 4, src: "/src/assets/images/poro.png", selected: false, blocked: false },
-  { id: 5, src: "/src/assets/images/poro.png", selected: false, blocked: false },
-  { id: 6, src: "/src/assets/images/poro.png", selected: false, blocked: false },
-  { id: 8, src: "/src/assets/images/poro.png", selected: false, blocked: false }
-]);
+const profileList: Ref<ProfileProps[]> = ref([]);
+
+const getAvatars = async () => {
+  handleLoading(true);
+  try {
+    const response = await getAvatarsService();
+    const replacedList = response.data.map((avatar) => ({
+      id: avatar.id,
+      src: avatar.url,
+      selected: avatar.selecionado,
+      blocked: avatar.desbloqueado
+    }));
+    profileList.value = [...replacedList];
+    profileList.value[0].selected = true;
+  } catch (error) {
+    console.error(error);
+  } finally {
+    handleLoading(false);
+  }
+};
 
 const selectProfile = (id: number | string) => {
   profileList.value.forEach((profile) => {
@@ -147,6 +161,10 @@ const register = async () => {
     login();
   }
 };
+
+onMounted(() => {
+  getAvatars();
+});
 </script>
 
 <style lang="scss">

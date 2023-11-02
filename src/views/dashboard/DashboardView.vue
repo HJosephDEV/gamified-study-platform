@@ -110,7 +110,10 @@ const getRanking = async (hasLoading = true) => {
 };
 
 onMounted(() => {
-  Promise.all([getInitializedModules(false), getModules(false), getRanking(false)]);
+  handleLoading(true);
+  Promise.all([getInitializedModules(false), getModules(false), getRanking(false)]).finally(() =>
+    handleLoading(false)
+  );
 });
 </script>
 

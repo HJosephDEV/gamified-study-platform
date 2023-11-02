@@ -114,10 +114,15 @@ const validateLoginAndEmail = async () => {
 
   try {
     const response = await getEmailOrLoginErrorService(payload);
-    registerFields.value.email.feedback = response.email;
-    registerFields.value.email.status = !response.email;
-    registerFields.value.username.status = !response.login;
-    registerFields.value.username.feedback = response.login;
+    if (registerFields.value.username.status) {
+      registerFields.value.username.status = !response.login;
+      registerFields.value.username.feedback = response.login;
+    }
+
+    if (registerFields.value.email.status) {
+      registerFields.value.email.status = !response.email;
+      registerFields.value.email.feedback = response.email;
+    }
 
     return !response.email && !response.login;
   } catch (error) {

@@ -60,7 +60,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: "/register-activities",
+    path: "/register-activities/:moduleId",
     name: "registerActivities",
     component: RegisterModulesView,
     meta: {

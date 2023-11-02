@@ -3,7 +3,9 @@ import type {
   GETInitializedModules,
   GETModuleTasks,
   GETModuleTasksParams,
-  GETModules
+  GETModules,
+  POSTModules,
+  POSTModulesPayload
 } from "@/@types/services/ModulesService";
 
 export const getInitializedModulesService = async (): Promise<GETInitializedModules> => {
@@ -29,6 +31,15 @@ export const getModuleTasksService = async (
 ): Promise<GETModuleTasks> => {
   try {
     const response = await api.get<GETModuleTasks>(`/modulo-tarefas?id_module=${params.id_module}`);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const createModulesService = async (payload: POSTModulesPayload) => {
+  try {
+    const response = await api.post<POSTModules>("/modulo", payload);
     return response.data;
   } catch (error) {
     return Promise.reject(error);

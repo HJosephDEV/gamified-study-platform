@@ -51,6 +51,7 @@ import BackButton from "@/components/back-button/BackButton.vue";
 
 import { useAppStore } from "@/stores/AppStore";
 import { useRegisterAvatarsStore } from "@/stores/RegisterAvatarsStore";
+import { createAvatarService } from "@/services/avatar/service";
 
 const registerAvatarsStore = useRegisterAvatarsStore();
 const appStore = useAppStore();
@@ -101,6 +102,22 @@ const saveAvatar = async () => {
       text: "Insira uma imagem!",
       timeClose: 2000
     });
+
+  const payload = {
+    url: imageFile.value,
+    level_req: requiredLevel.value
+  };
+
+  handleLoading(true);
+
+  try {
+    await createAvatarService(payload);
+    handleShow();
+  } catch (error) {
+    console.error(error);
+  } finally {
+    handleLoading(false);
+  }
 };
 </script>
 

@@ -15,6 +15,7 @@
         :key="`avatar-${avatar.id}`"
         :src="avatar.src"
         :required-level="avatar.requiredLevel"
+        @click="deleteAvatar(avatar.id)"
       />
     </div>
   </div>
@@ -27,13 +28,13 @@ import { useAppStore } from "@/stores/AppStore";
 import { useRegisterAvatarsStore } from "@/stores/RegisterAvatarsStore";
 
 import AppButton from "@/components/app-button/AppButton.vue";
-import { getAvatarsService } from "@/services/avatar/service";
+import { deleteAvatarService, getAvatarsService } from "@/services/avatar/service";
 import AvatarItem from "./AvatarItem.vue";
 import type { AvatarListProps } from "@/@types/views/RegisterAvatars";
 
 const appStore = useAppStore();
 const registerAvatarsStore = useRegisterAvatarsStore();
-const { handleLoading } = appStore;
+const { handleLoading, handleModal } = appStore;
 const { handleShow } = registerAvatarsStore;
 
 const avatarsList: Ref<AvatarListProps> = ref([]);
@@ -52,6 +53,30 @@ const getAvatars = async () => {
   } catch (error) {
     console.error(error);
   } finally {
+    handleLoading(false);
+  }
+};
+
+const deleteAvatar = async (id: number) => {
+  const params = {
+    id
+  };
+
+  handleLoading(true);
+
+  try {
+    await deleteAvatarService(params);
+    await getAvatars();
+  } catch (error) {
+    // @ts-ignore
+    error.response.status === 403 &&
+      handleModal({
+        active: true,
+        title: "Alerta!",
+        text: "Existem usuários utilizando este avatar!",
+        timeClose: 3000
+      });
+    console.error(error);
     handleLoading(false);
   }
 };

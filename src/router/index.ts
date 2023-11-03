@@ -7,6 +7,7 @@ import TasksView from "@/views/tasks/TasksView.vue";
 import TaskView from "@/views/task/TaskView.vue";
 import LoggedLayout from "@/layouts/logged-layout/LoggedLayout.vue";
 import RegisterModulesView from "@/views/register-modules/RegisterModulesView.vue";
+import RegisterAvatarsView from "@/views/register-avatars/RegisterAvatarsView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -70,7 +71,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/register-avatars",
     name: "registerAvatars",
-    component: RegisterModulesView,
+    component: RegisterAvatarsView,
     meta: {
       layout: LoggedLayout
     }

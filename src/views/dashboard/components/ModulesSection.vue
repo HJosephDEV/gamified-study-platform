@@ -66,7 +66,6 @@ const redirectToModule = (id: number) => {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 36px 24px;
-      margin-bottom: 36px;
     }
   }
 }
@@ -91,4 +90,3 @@ const redirectToModule = (id: number) => {
   }
 }
 </style>
-@/@types/views/Dashboard

@@ -82,3 +82,8 @@ export type POSTEmailOrLoginErrorPayload = {
   login: string;
   email: string;
 };
+
+export type GETValidateLifes = {
+  message: string;
+  bloquear: false;
+};

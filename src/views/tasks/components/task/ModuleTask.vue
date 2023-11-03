@@ -19,16 +19,40 @@
 import router from "@/router";
 
 import type { ModuleTaskProps } from "@/@types/views/Tasks";
+import { useAppStore } from "@/stores/AppStore";
+import { validateLifesService } from "@/services/user/service";
 
 const { taskId, taskName, isCompleted } = defineProps<ModuleTaskProps>();
 
-const redirectToTask = () =>
-  router.push({
-    name: "task",
-    params: {
-      taskId
-    }
-  });
+const appStore = useAppStore();
+const { handleLoading, handleModal } = appStore;
+
+const validateLifes = async () => {
+  handleLoading(true);
+
+  try {
+    const response = await validateLifesService();
+    response.bloquear &&
+      handleModal({ active: true, title: "Alerta!", text: response.message, timeClose: 3000 });
+    return !response.bloquear;
+  } catch (error) {
+    console.error(error);
+  } finally {
+    handleLoading(false);
+  }
+};
+
+const redirectToTask = async () => {
+  const hasLifes = await validateLifes();
+
+  hasLifes &&
+    router.push({
+      name: "task",
+      params: {
+        taskId
+      }
+    });
+};
 </script>
 
 <style lang="scss" scoped>

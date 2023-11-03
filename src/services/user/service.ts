@@ -10,7 +10,8 @@ import type {
   GETRankingProps,
   GetLoginProps,
   LoginProps,
-  RegisterParams
+  RegisterParams,
+  GETValidateLifes
 } from "@/@types/services/UserService";
 
 export const loginUserService = async (payload: LoginProps): Promise<GetLoginProps> => {
@@ -83,6 +84,15 @@ export const getEmailOrLoginErrorService = async (
 ): Promise<POSTEmailOrLoginError> => {
   try {
     const response = await api.post<POSTEmailOrLoginError>("verificar-dados", payload);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const validateLifesService = async (): Promise<GETValidateLifes> => {
+  try {
+    const response = await api.get<GETValidateLifes>("/usuario/verificar-vida");
     return response.data;
   } catch (error) {
     return Promise.reject(error);

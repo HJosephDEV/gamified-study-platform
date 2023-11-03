@@ -53,3 +53,17 @@ export type POSTModulesPayload = {
   nome: string;
   descricao: string;
 };
+
+export type DELETEModuleParams = {
+  id: number;
+};
+
+export type DELETEModule = {
+  message: string;
+};
+
+export type PUTModules = {
+  message: string;
+};
+
+export type PUTModulesPayload = { id: number } & POSTModulesPayload;

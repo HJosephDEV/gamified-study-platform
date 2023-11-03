@@ -18,17 +18,26 @@
       />
     </div>
 
-    <AppButton
-      is-full
-      @click="createModule"
-    >
-      Salvar
-    </AppButton>
+    <div class="modules-register-form__buttons">
+      <AppButton
+        v-if="Object.keys(selectedModule).length"
+        is-full
+        @click="deleteModule"
+      >
+        Excluir
+      </AppButton>
+      <AppButton
+        is-full
+        @click="Object.keys(selectedModule).length ? editModule() : createModule()"
+      >
+        Salvar
+      </AppButton>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, type Ref } from "vue";
+import { ref, onMounted, type Ref } from "vue";
 
 import type { RegisterModuleFields } from "@/@types/views/RegisterModules";
 
@@ -37,12 +46,18 @@ import BackButton from "@/components/back-button/BackButton.vue";
 import FormInput from "@/components/form-input/FormInput.vue";
 import { useRegisterModulesStore } from "@/stores/RegisterModulesStore";
 import { useAppStore } from "@/stores/AppStore";
-import { createModulesService } from "@/services/modules/service";
+import {
+  createModulesService,
+  deleteModuleService,
+  editModulesService
+} from "@/services/modules/service";
+import { storeToRefs } from "pinia";
 
 const registerModulesStore = useRegisterModulesStore();
 const appStore = useAppStore();
 const { handleLoading, handleModal } = appStore;
 const { handleShow } = registerModulesStore;
+const { selectedModule } = storeToRefs(registerModulesStore);
 
 const checkRequiredField = (fieldsParams: any, key: string) => {
   const status = !!fieldsParams[key].value;
@@ -117,6 +132,52 @@ const createModule = async () => {
     handleLoading(false);
   }
 };
+
+const deleteModule = async () => {
+  const params = {
+    id: selectedModule.value.id
+  };
+
+  handleLoading(true);
+
+  try {
+    await deleteModuleService(params);
+    handleShow();
+  } catch (error) {
+    console.error(error);
+  } finally {
+    handleLoading(false);
+  }
+};
+
+const editModule = async () => {
+  const isValid = validateFields();
+  if (!isValid) return;
+
+  const payload = {
+    id: selectedModule.value.id,
+    nome: fields.value.name.value,
+    descricao: fields.value.description.value
+  };
+
+  handleLoading(true);
+
+  try {
+    await editModulesService(payload);
+    handleShow();
+  } catch (error) {
+    console.error(error);
+  } finally {
+    handleLoading(false);
+  }
+};
+
+onMounted(() => {
+  if (Object.keys(selectedModule.value).length) {
+    fields.value.name.value = selectedModule.value.name;
+    fields.value.description.value = selectedModule.value.description;
+  }
+});
 </script>
 
 <style lang="scss" scoped>
@@ -137,6 +198,12 @@ const createModule = async () => {
     display: flex;
     flex-direction: column;
     gap: 16px;
+  }
+
+  .modules-register-form__buttons {
+    width: 100%;
+    display: flex;
+    gap: 24px;
   }
 }
 </style>

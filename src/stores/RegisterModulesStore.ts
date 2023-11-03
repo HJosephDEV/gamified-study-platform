@@ -1,13 +1,16 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
+import type { ModuleProps } from "@/@types/views/Dashboard";
 
 export const useRegisterModulesStore = defineStore("registerModulesStore", () => {
   const showModules = ref(true);
   const showForm = ref(false);
+  const selectedModule = ref({} as ModuleProps);
 
   const $resetRegisterModules = () => {
     showModules.value = true;
     showForm.value = false;
+    selectedModule.value = {} as ModuleProps;
   };
 
   const handleShow = (card?: string) => {
@@ -17,5 +20,5 @@ export const useRegisterModulesStore = defineStore("registerModulesStore", () =>
     showForm.value = card === "form";
   };
 
-  return { showModules, showForm, handleShow, $resetRegisterModules };
+  return { showModules, showForm, selectedModule, handleShow, $resetRegisterModules };
 });

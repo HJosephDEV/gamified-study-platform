@@ -1,7 +1,9 @@
 <template>
   <div class="register-modules-view__container">
     <div class="register-modules-view__content">
-      <h1>Cadastrar módulos</h1>
+      <h1 v-if="showModules">Gerenciar módulos</h1>
+      <h1 v-if="showForm && !Object.keys(selectedModule).length">Cadastrar módulo</h1>
+      <h1 v-if="showForm && Object.keys(selectedModule).length">Gerenciar módulo</h1>
 
       <div class="register-modules-view__card">
         <ModulesList v-if="showModules" />
@@ -20,7 +22,7 @@ import ModulesRegisterForm from "./components/ModulesRegisterForm.vue";
 import ModulesList from "./components/ModulesList.vue";
 
 const registerModulesStore = useRegisterModulesStore();
-const { showModules, showForm } = storeToRefs(registerModulesStore);
+const { showModules, showForm, selectedModule } = storeToRefs(registerModulesStore);
 </script>
 
 <style lang="scss" scoped>

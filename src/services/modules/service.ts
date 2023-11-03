@@ -1,11 +1,15 @@
 import api from "@/plugins/axios";
 import type {
+  DELETEModule,
+  DELETEModuleParams,
   GETInitializedModules,
   GETModuleTasks,
   GETModuleTasksParams,
   GETModules,
   POSTModules,
-  POSTModulesPayload
+  POSTModulesPayload,
+  PUTModules,
+  PUTModulesPayload
 } from "@/@types/services/ModulesService";
 
 export const getInitializedModulesService = async (): Promise<GETInitializedModules> => {
@@ -40,6 +44,24 @@ export const getModuleTasksService = async (
 export const createModulesService = async (payload: POSTModulesPayload) => {
   try {
     const response = await api.post<POSTModules>("/modulo", payload);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const deleteModuleService = async (params: DELETEModuleParams) => {
+  try {
+    const response = await api.delete<DELETEModule>(`/modulo?id=${params.id}`);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const editModulesService = async (payload: PUTModulesPayload) => {
+  try {
+    const response = await api.put<PUTModules>("/modulo", payload);
     return response.data;
   } catch (error) {
     return Promise.reject(error);

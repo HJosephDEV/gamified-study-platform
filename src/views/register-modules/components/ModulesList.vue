@@ -13,7 +13,7 @@
         v-for="(module, index) in modulesList"
         :key="`module-in-progress-${index}`"
         :module-name="module.name"
-        @click="redirectToModule(module.id)"
+        @click="editModule(module)"
       />
     </div>
   </div>
@@ -21,7 +21,6 @@
 
 <script lang="ts" setup>
 import { onMounted, ref, type Ref } from "vue";
-import router from "@/router";
 
 import type { ModuleProps } from "@/@types/views/Dashboard";
 import { getModulesService } from "@/services/modules/service";
@@ -30,21 +29,19 @@ import { useRegisterModulesStore } from "@/stores/RegisterModulesStore";
 
 import AppButton from "@/components/app-button/AppButton.vue";
 import SectionModule from "@/components/section-module/SectionModule.vue";
+import { storeToRefs } from "pinia";
 
 const appStore = useAppStore();
 const registerModulesStore = useRegisterModulesStore();
 const { handleLoading } = appStore;
 const { handleShow } = registerModulesStore;
+const { selectedModule } = storeToRefs(registerModulesStore);
 
 const modulesList: Ref<ModuleProps[]> = ref([]);
 
-const redirectToModule = (id: number) => {
-  router.push({
-    name: "registerActivities",
-    params: {
-      moduleId: id
-    }
-  });
+const editModule = (module: ModuleProps) => {
+  selectedModule.value = { ...module };
+  handleShow("form");
 };
 
 const getModules = async () => {

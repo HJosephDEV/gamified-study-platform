@@ -54,7 +54,7 @@ const addAdminOptionsInDropdown = () => {
     { label: "Configurações", event: () => router.push({ name: "settings" }) },
     { label: "Cadastrar módulos", event: () => router.push({ name: "registerModules" }) },
     { label: "Cadastrar atividades", event: () => router.push({ name: "registerModules" }) },
-    { label: "Cadastrar avatares", event: () => router.push({ name: "registerModules" }) },
+    { label: "Cadastrar avatares", event: () => router.push({ name: "registerAvatars" }) },
     { label: "Sair", event: () => logout() }
   ];
 };

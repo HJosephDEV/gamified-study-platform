@@ -7,7 +7,17 @@
       Voltar
     </BackButton>
     <h2 class="task-card__title">Tarefas</h2>
-    <ul class="task-card__task-list">
+
+    <h3
+      v-if="!tasks?.length"
+      class="task-card__alert"
+    >
+      Não há tarefas cadastradas!
+    </h3>
+    <ul
+      v-else
+      class="task-card__task-list"
+    >
       <ModuleTask
         v-for="(task, index) in tasks"
         :key="`module-task-${index}`"
@@ -55,6 +65,11 @@ const redirecToHome = () => router.push({ name: "dashboard" });
     font-weight: 600;
     line-height: normal;
     margin-top: 24px;
+  }
+
+  .task-card__alert {
+    margin: 48px;
+    text-align: center;
   }
 
   .task-card__task-list {

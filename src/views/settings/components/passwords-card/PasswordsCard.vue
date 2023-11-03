@@ -91,6 +91,11 @@ const validateFields = () => {
   return isValid;
 };
 
+const clearFields = () => {
+  fields.value.password.value = "";
+  fields.value.retypePassword.value = "";
+};
+
 const changeUserPassword = async () => {
   const payload = {
     senha: fields.value.password.value
@@ -100,6 +105,7 @@ const changeUserPassword = async () => {
 
   try {
     await changeUserPasswordService(payload);
+    clearFields();
   } catch (error) {
     console.error(error);
   } finally {

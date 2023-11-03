@@ -10,7 +10,7 @@
       <div class="profile-card__right-container">
         <div class="profile-card__profile-infos">
           <span class="profile-card__profile-name text-ellipsis">
-            {{ userData.username }} {{ userData.lastname }}
+            {{ userData.firstname }} {{ userData.lastname }}
           </span>
           <span class="profile-card__profile-username text-ellipsis">{{ userData.username }}</span>
           <span class="profile-card__profile-level text-ellipsis"

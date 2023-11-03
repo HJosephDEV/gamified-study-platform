@@ -1,3 +1,4 @@
+import router from "@/router";
 import axios from "axios";
 
 const api = axios.create({
@@ -19,6 +20,11 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
+    // @ts-ignore
+    if (error.response.status === 401) {
+      localStorage.clear();
+      router.push({ name: "login" });
+    }
     return Promise.reject(error);
   }
 );

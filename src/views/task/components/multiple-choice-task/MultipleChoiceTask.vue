@@ -139,6 +139,18 @@ const answerQuestion = async (answerId: number, taskId: number) => {
     handleIncorrectAnswer(response.data.vidas);
   } catch (error) {
     console.error(error);
+
+    // @ts-ignore
+    if (error.response.status === 403) {
+      redirectToTasks();
+      handleModal({
+        active: true,
+        title: "Alerta!",
+        // @ts-ignore
+        text: error.response.data.message,
+        timeClose: 3000
+      });
+    }
   } finally {
     handleLoading(false);
   }

@@ -41,11 +41,6 @@ const getUser = async () => {
     const response = await getUserService();
     saveUserData(response.data);
   } catch (error) {
-    // @ts-ignore
-    if (error.response.status === 401) {
-      localStorage.clear();
-      router.push({ name: "login" });
-    }
     console.error(error);
   } finally {
     handleLoading(false);

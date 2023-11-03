@@ -34,7 +34,7 @@ import AppButton from "@/components/app-button/AppButton.vue";
 import FormInput from "@/components/form-input/FormInput.vue";
 import { useUserStore } from "@/stores/UserStore";
 import { useAppStore } from "@/stores/AppStore";
-import { changeUserInfosService } from "@/services/user/service";
+import { changeUserInfosService, getUser } from "@/services/user/service";
 
 const appStore = useAppStore();
 const userStore = useUserStore();
@@ -133,9 +133,9 @@ const changeUserInfos = async () => {
 
   try {
     await changeUserInfosService(payload);
+    await getUser();
   } catch (error) {
     console.error(error);
-  } finally {
     handleLoading(false);
   }
 };

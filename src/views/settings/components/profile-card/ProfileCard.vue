@@ -44,7 +44,7 @@ import CharactersModal from "@/components/characters-modal/CharactersModal.vue";
 import { useUserStore } from "@/stores/UserStore";
 import { getAvatarsService } from "@/services/avatar/service";
 import { useAppStore } from "@/stores/AppStore";
-import { changeAvatarUserService } from "@/services/user/service";
+import { changeAvatarUserService, getUser } from "@/services/user/service";
 
 const appStore = useAppStore();
 const userStore = useUserStore();
@@ -89,9 +89,9 @@ const selectAvatar = async (id: number) => {
   handleLoading(true);
   try {
     await changeAvatarUserService(payload);
+    await getUser();
   } catch (error) {
     console.error(error);
-  } finally {
     handleLoading(false);
   }
 };

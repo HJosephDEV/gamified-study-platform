@@ -45,10 +45,11 @@ import { useUserStore } from "@/stores/UserStore";
 import { getAvatarsService } from "@/services/avatar/service";
 import { useAppStore } from "@/stores/AppStore";
 import { changeAvatarUserService, getUser } from "@/services/user/service";
+import { storeToRefs } from "pinia";
 
 const appStore = useAppStore();
 const userStore = useUserStore();
-const { userData } = userStore;
+const { userData } = storeToRefs(userStore);
 const { handleLoading } = appStore;
 
 const opennedCharacterModal = ref(false);
@@ -89,6 +90,7 @@ const selectAvatar = async (id: number) => {
   handleLoading(true);
   try {
     await changeAvatarUserService(payload);
+    await getAvatars();
     await getUser();
   } catch (error) {
     console.error(error);

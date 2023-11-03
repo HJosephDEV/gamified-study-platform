@@ -33,9 +33,10 @@ import router from "@/router";
 import { Heart } from "lucide-vue-next";
 import AppDropdown from "@/components/app-dropdown/AppDropdown.vue";
 import { useUserStore } from "@/stores/UserStore";
+import { storeToRefs } from "pinia";
 
 const userStore = useUserStore();
-const { userData } = userStore;
+const { userData } = storeToRefs(userStore);
 
 const logout = () => {
   localStorage.clear();
@@ -60,7 +61,7 @@ const addAdminOptionsInDropdown = () => {
 };
 
 onMounted(() => {
-  userData.isAdmin && addAdminOptionsInDropdown();
+  userData.value.isAdmin && addAdminOptionsInDropdown();
 });
 </script>
 

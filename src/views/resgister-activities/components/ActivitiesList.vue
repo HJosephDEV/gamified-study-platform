@@ -5,7 +5,7 @@
     </div>
 
     <AppSelect
-      v-model:input-value="selectedModuleID"
+      v-model:input-value="selectedModule"
       label="Módulo"
       :option-list="modulesList"
     />
@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, watch, type Ref } from "vue";
+import { onMounted, ref, type Ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 
 import type { TaskProps } from "@/@types/views/Task";
@@ -44,11 +44,9 @@ const appStore = useAppStore();
 const registerActivitiesStore = useRegisterActivitiesStore();
 const { handleLoading } = appStore;
 const { handleShow } = registerActivitiesStore;
-const { selectedActivity } = storeToRefs(registerActivitiesStore);
+const { selectedActivity, selectedModule } = storeToRefs(registerActivitiesStore);
 
 const activitiesList: Ref<TaskProps[]> = ref([]);
-
-const selectedModuleID: Ref<number | null> = ref(null);
 
 const editActivity = (activity: TaskProps) => {
   selectedActivity.value = { ...activity };
@@ -100,6 +98,10 @@ const getModules = async () => {
     }));
 
     modulesList.value = [...replacedModules];
+
+    if (selectedModule.value === null) {
+      selectedModule.value = replacedModules.length ? replacedModules[0]?.id : null;
+    }
   } catch (error) {
     console.error(error);
   } finally {
@@ -107,12 +109,13 @@ const getModules = async () => {
   }
 };
 
-watch(selectedModuleID, (value) => {
+watch(selectedModule, (value) => {
   value !== null && getTasks(value);
 });
 
-onMounted(() => {
-  getModules();
+onMounted(async () => {
+  await getModules();
+  selectedModule.value !== null && (await getTasks(selectedModule.value));
 });
 </script>
 
@@ -122,6 +125,7 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   gap: 48px;
+
   .activities-list__card-header {
     width: 100%;
     display: flex;

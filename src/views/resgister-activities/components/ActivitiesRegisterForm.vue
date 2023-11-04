@@ -6,7 +6,7 @@
 
     <div class="activities-register-form__form">
       <AppSelect
-        v-model:input-value="selectedType"
+        v-model:input-value="fields.type"
         label="Tipo de atividade"
         :option-list="typesList"
       />
@@ -15,154 +15,82 @@
         :input-label="fields.name.label"
         :input-value="fields.name.value"
         :input-type="fields.name.type"
-        :input-status="fields.name.status"
         :input-placeholder="fields.name.placeholder"
-        :input-feedback="fields.name.feedback"
+        :input-status="validations.name.valid"
+        :input-feedback="validations.name.feedback"
         @update:input-value="(newValue) => (fields.name.value = newValue)"
+      />
+
+      <FormInput
+        :input-label="fields.exp.label"
+        :input-value="fields.exp.value"
+        :input-type="fields.exp.type"
+        :input-placeholder="fields.exp.placeholder"
+        :input-status="validations.exp.valid"
+        :input-feedback="validations.exp.feedback"
+        @update:input-value="(newValue) => (fields.exp.value = newValue)"
       />
 
       <FormInput
         :input-label="fields.content.label"
         :input-value="fields.content.value"
         :input-type="fields.content.type"
-        :input-status="fields.content.status"
         :input-placeholder="fields.content.placeholder"
-        :input-feedback="fields.content.feedback"
+        :input-status="validations.content.valid"
+        :input-feedback="validations.content.feedback"
         input-model="textarea"
         @update:input-value="(newValue) => (fields.content.value = newValue)"
       />
 
+      <br />
       <h2>Respostas</h2>
 
-      <div
-        v-for="(answer, index) in answers"
-        :key="`answer-${index}`"
-        class="activities-register-form__multiple-choice-fields"
-      >
-        <FormInput
-          :input-label="`Resposta ${index + 1}`"
-          :input-value="answer.value"
-          :input-type="answer.type"
-          :input-status="answer.status"
-          :input-placeholder="answer.placeholder"
-          :input-feedback="answer.feedback"
-          @update:input-value="(newValue) => (answer.value = newValue)"
-        />
-
-        <div class="activities-register-form__container-buttons-fields">
-          <AppButton
-            v-if="index === answers.length - 1 && answers.length < 4"
-            @click="addAnswer"
-            >+</AppButton
-          >
-          <AppButton
-            v-if="answers.length > 2"
-            @click="removeAnswer(index)"
-            >-</AppButton
-          >
-        </div>
-      </div>
-
+      <MultipleChoice />
+      <br />
       <h3>Definir resposta</h3>
 
       <AppSelect
-        v-model:input-value="correctAnswer"
+        v-model:input-value="fields.correctAnswerIndex"
         label="Resposta correta"
         :option-list="anwersList"
       />
     </div>
 
     <div class="activities-register-form__buttons">
-      <AppButton is-full> Excluir </AppButton>
-      <AppButton is-full> Salvar </AppButton>
+      <AppButton
+        v-if="Object.keys(selectedActivity).length"
+        is-full
+      >
+        Excluir
+      </AppButton>
+      <AppButton
+        is-full
+        @click="save"
+      >
+        Salvar
+      </AppButton>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
+import { computed, ref } from "vue";
 
 import AppButton from "@/components/app-button/AppButton.vue";
 import BackButton from "@/components/back-button/BackButton.vue";
 import FormInput from "@/components/form-input/FormInput.vue";
-import { useRegisterModulesStore } from "@/stores/RegisterModulesStore";
-// import { useAppStore } from "@/stores/AppStore";
-
-// import { storeToRefs } from "pinia";
+import { useAppStore } from "@/stores/AppStore";
 import AppSelect from "@/components/app-select/AppSelect.vue";
+import { useRegisterActivitiesStore } from "@/stores/RegisterActivitiesStore";
+import { storeToRefs } from "pinia";
+import MultipleChoice from "@/views/resgister-activities/components/MultipleChoice.vue";
 
-const registerModulesStore = useRegisterModulesStore();
-// const appStore = useAppStore();
-// const { handleLoading, handleModal } = appStore;
-const { handleShow } = registerModulesStore;
-// const { selectedModule } = storeToRefs(registerModulesStore);
+const appStore = useAppStore();
+const { handleLoading, handleModal } = appStore;
 
-const checkRequiredField = (fieldsParams: any, key: string) => {
-  const status = !!fieldsParams[key].value;
-  fieldsParams[key].status = status;
-  fieldsParams[key].feedback = status ? "" : "Campo obrigatório";
-
-  return status;
-};
-
-const fields = ref({
-  name: {
-    label: "Nome da atividade",
-    value: "",
-    type: "text",
-    placeholder: "Digite aqui",
-    status: true,
-    feedback: "",
-    validations: [checkRequiredField]
-  },
-  content: {
-    label: "Conteúdo da atividade",
-    value: "",
-    type: "text",
-    placeholder: "Digite aqui",
-    status: true,
-    feedback: "",
-    validations: [checkRequiredField]
-  }
-});
-
-const answers = ref([
-  {
-    value: "",
-    type: "text",
-    placeholder: "Digite aqui",
-    status: true,
-    feedback: "",
-    validations: [checkRequiredField]
-  },
-  {
-    value: "",
-    type: "text",
-    placeholder: "Digite aqui",
-    status: true,
-    feedback: "",
-    validations: [checkRequiredField]
-  }
-]);
-
-const addAnswer = () => {
-  answers.value = [
-    ...answers.value,
-    {
-      value: "",
-      type: "text",
-      placeholder: "Digite aqui",
-      status: true,
-      feedback: "",
-      validations: [checkRequiredField]
-    }
-  ];
-};
-
-const removeAnswer = (index: number) => {
-  answers.value.splice(index, 1);
-  correctAnswer.value = 0;
-};
+const registerActivitiesStore = useRegisterActivitiesStore();
+const { handleShow } = registerActivitiesStore;
+const { fields, selectedActivity, validations } = storeToRefs(registerActivitiesStore);
 
 const typesList = ref([
   { id: 0, label: "Múltipla escolha" },
@@ -170,13 +98,17 @@ const typesList = ref([
   { id: 2, label: "Arraste a correta" }
 ]);
 
-const selectedType = ref(0);
-
 const anwersList = computed(() =>
-  answers.value.map((_, index) => ({ id: index, label: `Resposta ${index + 1}` }))
+  fields.value.answers.map((_, index) => ({ id: index, label: `Resposta ${index + 1}` }))
 );
 
-const correctAnswer = ref(0);
+const validateFields = () => {
+  for (const value of Object.values(validations.value)) value.validation?.();
+};
+
+const save = () => {
+  validateFields();
+};
 </script>
 
 <style lang="scss" scoped>
@@ -207,6 +139,7 @@ const correctAnswer = ref(0);
         display: grid;
         grid-template-columns: minmax(60px, 60px) minmax(60px, 60px);
         gap: 8px;
+
         button {
           height: 34px;
         }

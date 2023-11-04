@@ -2,7 +2,7 @@
   <div class="form-input__container">
     <label>{{ inputLabel }}</label>
     <input
-      v-if="inputModel === 'input'"
+      v-if="inputModelLocal === 'input'"
       :class="[{ 'is-invalid': !inputStatus }]"
       :type="inputType"
       :value="inputValue"
@@ -10,7 +10,7 @@
       @input="updateInputValue"
     />
     <textarea
-      v-if="inputModel === 'textarea'"
+      v-if="inputModelLocal === 'textarea'"
       rows="5"
       :class="[{ 'is-invalid': !inputStatus }]"
       :type="inputType"
@@ -24,7 +24,8 @@
 </template>
 
 <script lang="ts" setup>
-import { type InputProps, type EmitsProps } from "@/@types/components/FormInput";
+import { type EmitsProps, type InputProps } from "@/@types/components/FormInput";
+import { ref } from "vue";
 
 const {
   inputLabel,
@@ -34,9 +35,9 @@ const {
   inputStatus,
   inputPlaceholder,
   inputModel
-} = withDefaults(defineProps<InputProps>(), {
-  inputModel: "input"
-});
+} = defineProps<InputProps>();
+
+const inputModelLocal = ref(inputModel || "input");
 
 const emit = defineEmits<EmitsProps>();
 
@@ -77,6 +78,7 @@ const updateInputValue = (e: Event) => {
     &::placeholder {
       color: #a8a8a8;
     }
+
     &.is-invalid {
       border-color: #ff6363;
     }

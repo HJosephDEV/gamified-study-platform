@@ -3,7 +3,7 @@
     <div class="register-activities-view__content">
       <h1 v-if="showActivities">Gerenciar atividades</h1>
       <h1 v-if="showForm && !Object.keys(selectedActivity).length">Cadastrar atividades</h1>
-      <h1 v-if="showForm && Object.keys(selectedActivity).length">Gerenciar atividades</h1>
+      <h1 v-if="showForm && Object.keys(selectedActivity).length">Gerenciar atividade</h1>
 
       <div class="register-activities-view__card">
         <ActivitiesList v-if="showActivities" />

@@ -10,6 +10,7 @@ export type TaskProps = {
   taskName: string;
   taskContent: string;
   taskType: number;
+  taskExp: number;
   taskAnswers: AnswerProps[];
 };
 

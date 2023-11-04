@@ -192,6 +192,61 @@ export const useRegisterActivitiesStore = defineStore("registerActivitiesStore",
     };
   };
 
+  const cleanContentAndAnswers = () => {
+    fields.value = {
+      ...fields.value,
+      content: {
+        label: "Conteúdo da atividade",
+        value: "",
+        type: "text",
+        placeholder: "Digite aqui"
+      },
+      answers: [],
+      correctAnswerIndex: 0
+    };
+
+    validations.value = {
+      ...validations.value,
+      content: {
+        valid: true,
+        feedback: "",
+        validation: () => {
+          if (fields.value.type === 0) {
+            return checkRequiredField(validations.value, "content");
+          }
+
+          return true;
+        }
+      },
+      answers: {
+        valid: true,
+        feedback: "",
+        validation: () => {
+          if (!fields.value.answers.length) return false;
+
+          let isValid = true;
+
+          fields.value.answers.forEach((answer, i) => {
+            const status = !!answer.value;
+            fields.value.answers[i].valid = status;
+            fields.value.answers[i].feedback = status ? "" : "Campo obrigatório";
+
+            if (isValid && !status) {
+              isValid = false;
+            }
+          });
+
+          return isValid;
+        }
+      },
+      correctAnswerIndex: {
+        valid: true,
+        feedback: "",
+        validation: () => fields.value.correctAnswerIndex !== null
+      }
+    };
+  };
+
   const handleShow = (card?: string) => {
     if (!card) return $resetRegisterActivities();
 
@@ -207,6 +262,7 @@ export const useRegisterActivitiesStore = defineStore("registerActivitiesStore",
     selectedActivity,
     selectedModule,
     handleShow,
+    cleanContentAndAnswers,
     $resetRegisterActivities
   };
 });

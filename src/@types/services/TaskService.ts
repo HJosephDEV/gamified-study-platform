@@ -38,6 +38,7 @@ export type GETTasks = {
     conteudo: string;
     tipo: number;
     id_modulo: number;
+    tarefa_exp: number;
     respostas: ({ resposta_correta: boolean } & AnswerProps)[];
   }[];
 };
@@ -78,6 +79,10 @@ export type POSTCreateTaskPayload = {
   index_resp: number;
   respostas: answerProps[];
 };
+
+export type PUTCreateTask = POSTCreateTask;
+
+export type PUTCreateTaskPayload = { id: number } & POSTCreateTaskPayload;
 
 export type DELETETask = {
   message: string;

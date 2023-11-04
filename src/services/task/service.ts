@@ -9,7 +9,9 @@ import type {
   POSTAnswerQuestion,
   POSTAnswerQuestionParams,
   POSTCreateTask,
-  POSTCreateTaskPayload
+  POSTCreateTaskPayload,
+  PUTCreateTask,
+  PUTCreateTaskPayload
 } from "@/@types/services/TaskService";
 
 export const getTaskService = async (params: GETTaskParams): Promise<GETTask> => {
@@ -48,6 +50,15 @@ export const createTaskService = async (
 ): Promise<POSTCreateTask> => {
   try {
     const response = await api.post<POSTCreateTask>(`/tarefa`, payload);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const editTaskService = async (payload: PUTCreateTaskPayload): Promise<PUTCreateTask> => {
+  try {
+    const response = await api.put<PUTCreateTask>(`/tarefa`, payload);
     return response.data;
   } catch (error) {
     return Promise.reject(error);

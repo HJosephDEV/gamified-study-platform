@@ -65,6 +65,7 @@ const getTasks = async (id: number) => {
     const replacedList = response.data.map((task) => ({
       taskId: task.id,
       taskName: task.nome,
+      taskExp: task.tarefa_exp,
       taskContent: task.conteudo,
       taskType: task.tipo,
       taskAnswers: task.respostas.map((answer) => ({

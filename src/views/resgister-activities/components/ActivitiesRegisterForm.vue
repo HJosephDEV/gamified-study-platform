@@ -45,15 +45,18 @@
       <br />
       <h2>Respostas</h2>
 
-      <MultipleChoice />
+      <MultipleChoice v-if="fields.type === 0" />
       <br />
-      <h3>Definir resposta</h3>
 
-      <AppSelect
-        v-model:input-value="fields.correctAnswerIndex"
-        label="Resposta correta"
-        :option-list="anwersList"
-      />
+      <div v-if="fields.answers.length > 1">
+        <h3>Definir resposta</h3>
+
+        <AppSelect
+          v-model:input-value="fields.correctAnswerIndex"
+          label="Resposta correta"
+          :option-list="anwersList"
+        />
+      </div>
     </div>
 
     <div class="activities-register-form__buttons">
@@ -66,7 +69,7 @@
       </AppButton>
       <AppButton
         is-full
-        @click="saveTask"
+        @click="Object.keys(selectedActivity).length ? editTask() : createTask()"
       >
         Salvar
       </AppButton>
@@ -75,7 +78,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 
 import AppButton from "@/components/app-button/AppButton.vue";
 import BackButton from "@/components/back-button/BackButton.vue";
@@ -85,13 +88,13 @@ import AppSelect from "@/components/app-select/AppSelect.vue";
 import { useRegisterActivitiesStore } from "@/stores/RegisterActivitiesStore";
 import { storeToRefs } from "pinia";
 import MultipleChoice from "@/views/resgister-activities/components/MultipleChoice.vue";
-import { createTaskService, deleteTaskService } from "@/services/task/service";
+import { createTaskService, deleteTaskService, editTaskService } from "@/services/task/service";
 
 const appStore = useAppStore();
 const { handleLoading } = appStore;
 
 const registerActivitiesStore = useRegisterActivitiesStore();
-const { handleShow } = registerActivitiesStore;
+const { handleShow, cleanContentAndAnswers } = registerActivitiesStore;
 const { fields, selectedActivity, validations, selectedModule } =
   storeToRefs(registerActivitiesStore);
 
@@ -119,7 +122,7 @@ const validateFields = () => {
   return isValid;
 };
 
-const saveTask = async () => {
+const createTask = async () => {
   const isValid = validateFields();
   if (!isValid) return;
 
@@ -145,6 +148,33 @@ const saveTask = async () => {
   }
 };
 
+const editTask = async () => {
+  const isValid = validateFields();
+  if (!isValid) return;
+
+  const payload = {
+    id: selectedActivity.value.taskId,
+    nome: fields.value.name.value,
+    conteudo: fields.value.content.value,
+    tipo: fields.value.type,
+    tarefa_exp: fields.value.exp.value,
+    id_modulo: selectedModule.value,
+    index_resp: fields.value.correctAnswerIndex,
+    respostas: fields.value.answers.map((answer) => ({ descricao: answer.value }))
+  };
+
+  handleLoading(true);
+
+  try {
+    await editTaskService(payload);
+    handleShow();
+  } catch (error) {
+    console.error(error);
+  } finally {
+    handleLoading(false);
+  }
+};
+
 const deleteTask = async () => {
   const params = {
     id: selectedActivity.value.taskId
@@ -161,6 +191,34 @@ const deleteTask = async () => {
     handleLoading(false);
   }
 };
+
+const fillMultipleChoice = () => {
+  fields.value.type = selectedActivity.value.taskType;
+  fields.value.name.value = selectedActivity.value.taskName;
+  fields.value.exp.value = selectedActivity.value.taskExp;
+  fields.value.content.value = selectedActivity.value.taskContent;
+  fields.value.answers = selectedActivity.value.taskAnswers.map((taskAnswer) => ({
+    value: taskAnswer.answerDescription,
+    type: "text",
+    placeholder: "Digite aqui",
+    valid: true,
+    feedback: ""
+  }));
+  fields.value.correctAnswerIndex = selectedActivity.value.taskAnswers.findIndex(
+    (taskAnswer) => taskAnswer.correct
+  );
+};
+
+onMounted(() => {
+  selectedActivity.value.taskType === 0 && fillMultipleChoice();
+});
+
+watch(
+  () => fields.value.type,
+  () => {
+    cleanContentAndAnswers();
+  }
+);
 </script>
 
 <style lang="scss" scoped>

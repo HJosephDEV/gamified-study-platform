@@ -81,11 +81,19 @@ export const useRegisterActivitiesStore = defineStore("registerActivitiesStore",
       validation: () => {
         if (!fields.value.answers.length) return false;
 
+        let isValid = true;
+
         fields.value.answers.forEach((answer, i) => {
           const status = !!answer.value;
           fields.value.answers[i].valid = status;
           fields.value.answers[i].feedback = status ? "" : "Campo obrigatório";
+
+          if (isValid && !status) {
+            isValid = false;
+          }
         });
+
+        return isValid;
       }
     },
     correctAnswerIndex: {
@@ -99,6 +107,89 @@ export const useRegisterActivitiesStore = defineStore("registerActivitiesStore",
     showActivities.value = true;
     showForm.value = false;
     selectedActivity.value = {} as TaskProps;
+    fields.value = {
+      type: 0,
+      name: {
+        label: "Nome da atividade",
+        value: "",
+        type: "text",
+        placeholder: "Digite aqui"
+      },
+      exp: {
+        label: "Quantidade de exp",
+        value: 1,
+        type: "number",
+        placeholder: "Digite aqui"
+      },
+      content: {
+        label: "Conteúdo da atividade",
+        value: "",
+        type: "text",
+        placeholder: "Digite aqui"
+      },
+      answers: [],
+      correctAnswerIndex: 0
+    };
+    validations.value = {
+      type: {
+        valid: true,
+        feedback: "",
+        validation: () => fields.value.type !== null
+      },
+      name: {
+        valid: true,
+        feedback: "",
+        validation: () => checkRequiredField(validations.value, "name")
+      },
+      exp: {
+        valid: true,
+        feedback: "",
+        validation: () => {
+          const isValid = fields.value.exp.value > 0;
+          validations.value.exp.valid = isValid;
+          validations.value.exp.feedback = isValid ? "" : "Campo obrigatório";
+
+          return isValid;
+        }
+      },
+      content: {
+        valid: true,
+        feedback: "",
+        validation: () => {
+          if (fields.value.type === 0) {
+            return checkRequiredField(validations.value, "content");
+          }
+
+          return true;
+        }
+      },
+      answers: {
+        valid: true,
+        feedback: "",
+        validation: () => {
+          if (!fields.value.answers.length) return false;
+
+          let isValid = true;
+
+          fields.value.answers.forEach((answer, i) => {
+            const status = !!answer.value;
+            fields.value.answers[i].valid = status;
+            fields.value.answers[i].feedback = status ? "" : "Campo obrigatório";
+
+            if (isValid && !status) {
+              isValid = false;
+            }
+          });
+
+          return isValid;
+        }
+      },
+      correctAnswerIndex: {
+        valid: true,
+        feedback: "",
+        validation: () => fields.value.correctAnswerIndex !== null
+      }
+    };
   };
 
   const handleShow = (card?: string) => {

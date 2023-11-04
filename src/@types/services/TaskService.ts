@@ -60,3 +60,21 @@ export type POSTAnswerQuestion = {
   message: string;
   data: AnswerResponse;
 };
+
+export type POSTCreateTask = {
+  message: string;
+};
+
+type answerProps = {
+  descricao: string;
+};
+
+export type POSTCreateTaskPayload = {
+  nome: string;
+  conteudo: string;
+  tipo: number;
+  tarefa_exp: number;
+  id_modulo: number | null;
+  index_resp: number;
+  respostas: answerProps[];
+};

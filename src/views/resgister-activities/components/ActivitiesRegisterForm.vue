@@ -84,13 +84,15 @@ import AppSelect from "@/components/app-select/AppSelect.vue";
 import { useRegisterActivitiesStore } from "@/stores/RegisterActivitiesStore";
 import { storeToRefs } from "pinia";
 import MultipleChoice from "@/views/resgister-activities/components/MultipleChoice.vue";
+import { createTaskService } from "@/services/task/service";
 
 const appStore = useAppStore();
-const { handleLoading, handleModal } = appStore;
+const { handleLoading } = appStore;
 
 const registerActivitiesStore = useRegisterActivitiesStore();
 const { handleShow } = registerActivitiesStore;
-const { fields, selectedActivity, validations } = storeToRefs(registerActivitiesStore);
+const { fields, selectedActivity, validations, selectedModule } =
+  storeToRefs(registerActivitiesStore);
 
 const typesList = ref([
   { id: 0, label: "Múltipla escolha" },
@@ -103,11 +105,43 @@ const anwersList = computed(() =>
 );
 
 const validateFields = () => {
-  for (const value of Object.values(validations.value)) value.validation?.();
+  let isValid = true;
+
+  for (const value of Object.values(validations.value)) {
+    const isValidLocal = value.validation?.();
+
+    if (isValid && !isValidLocal) {
+      isValid = false;
+    }
+  }
+
+  return isValid;
 };
 
-const save = () => {
-  validateFields();
+const save = async () => {
+  const isValid = validateFields();
+  if (!isValid) return;
+
+  const payload = {
+    nome: fields.value.name.value,
+    conteudo: fields.value.content.value,
+    tipo: fields.value.type,
+    tarefa_exp: fields.value.exp.value,
+    id_modulo: selectedModule.value,
+    index_resp: fields.value.correctAnswerIndex,
+    respostas: fields.value.answers.map((answer) => ({ descricao: answer.value }))
+  };
+
+  handleLoading(true);
+
+  try {
+    await createTaskService(payload);
+    handleShow();
+  } catch (error) {
+    console.error(error);
+  } finally {
+    handleLoading(false);
+  }
 };
 </script>
 

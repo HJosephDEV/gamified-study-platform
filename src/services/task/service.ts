@@ -1,11 +1,13 @@
 import api from "@/plugins/axios";
 import type {
   GETTask,
-  POSTAnswerQuestionParams,
-  POSTAnswerQuestion,
-  GETTasksParams,
+  GETTaskParams,
   GETTasks,
-  GETTaskParams
+  GETTasksParams,
+  POSTAnswerQuestion,
+  POSTAnswerQuestionParams,
+  POSTCreateTask,
+  POSTCreateTaskPayload
 } from "@/@types/services/TaskService";
 
 export const getTaskService = async (params: GETTaskParams): Promise<GETTask> => {
@@ -33,6 +35,17 @@ export const answerQuestionService = async (
     const response = await api.post<POSTAnswerQuestion>(
       `/resposta/enviar?idResposta=${params.answerId}&idTarefa=${params.taskId}`
     );
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const createTaskService = async (
+  payload: POSTCreateTaskPayload
+): Promise<POSTCreateTask> => {
+  try {
+    const response = await api.post<POSTCreateTask>(`/tarefa`, payload);
     return response.data;
   } catch (error) {
     return Promise.reject(error);

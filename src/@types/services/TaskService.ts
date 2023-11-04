@@ -2,6 +2,10 @@ export type GETTaskParams = {
   taskId: string;
 };
 
+export type GETTasksParams = {
+  moduleId: string;
+};
+
 type AnswerProps = {
   id: number;
   descricao: string;
@@ -24,6 +28,18 @@ export type GETTask = {
     perc_completo: number;
     tarefa: TaskProps;
   };
+};
+
+export type GETTasks = {
+  message: string;
+  data: {
+    id: number;
+    nome: string;
+    conteudo: string;
+    tipo: number;
+    id_modulo: number;
+    respostas: ({ resposta_correta: boolean } & AnswerProps)[];
+  }[];
 };
 
 export type POSTAnswerQuestionParams = {

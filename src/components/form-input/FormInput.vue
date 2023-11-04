@@ -2,12 +2,23 @@
   <div class="form-input__container">
     <label>{{ inputLabel }}</label>
     <input
+      v-if="inputModel === 'input'"
       :class="[{ 'is-invalid': !inputStatus }]"
       :type="inputType"
       :value="inputValue"
       :placeholder="inputPlaceholder"
       @input="updateInputValue"
     />
+    <textarea
+      v-if="inputModel === 'textarea'"
+      rows="5"
+      :class="[{ 'is-invalid': !inputStatus }]"
+      :type="inputType"
+      :value="inputValue"
+      :placeholder="inputPlaceholder"
+      @input="updateInputValue"
+    />
+
     <span v-if="!inputStatus && !!inputFeedback">{{ inputFeedback }}</span>
   </div>
 </template>
@@ -15,8 +26,17 @@
 <script lang="ts" setup>
 import { type InputProps, type EmitsProps } from "@/@types/components/FormInput";
 
-const { inputLabel, inputValue, inputType, inputFeedback, inputStatus, inputPlaceholder } =
-  defineProps<InputProps>();
+const {
+  inputLabel,
+  inputValue,
+  inputType,
+  inputFeedback,
+  inputStatus,
+  inputPlaceholder,
+  inputModel
+} = withDefaults(defineProps<InputProps>(), {
+  inputModel: "input"
+});
 
 const emit = defineEmits<EmitsProps>();
 
@@ -38,8 +58,10 @@ const updateInputValue = (e: Event) => {
     line-height: normal;
   }
 
-  input {
-    width: 100%;
+  input,
+  textarea {
+    max-width: 100%;
+    min-width: 100%;
     padding: 6px 12px;
     border-radius: 5px;
     background: #fff;

@@ -2,6 +2,7 @@ export type AnswerProps = {
   answerId: number;
   answerDescription: string;
   taskId: number;
+  correct: boolean;
 };
 
 export type TaskProps = {

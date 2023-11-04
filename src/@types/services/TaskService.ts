@@ -78,3 +78,11 @@ export type POSTCreateTaskPayload = {
   index_resp: number;
   respostas: answerProps[];
 };
+
+export type DELETETask = {
+  message: string;
+};
+
+export type DELETETaskParams = {
+  id: number;
+};

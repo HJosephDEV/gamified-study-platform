@@ -1,5 +1,7 @@
 import api from "@/plugins/axios";
 import type {
+  DELETETask,
+  DELETETaskParams,
   GETTask,
   GETTaskParams,
   GETTasks,
@@ -46,6 +48,15 @@ export const createTaskService = async (
 ): Promise<POSTCreateTask> => {
   try {
     const response = await api.post<POSTCreateTask>(`/tarefa`, payload);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const deleteTaskService = async (params: DELETETaskParams): Promise<DELETETask> => {
+  try {
+    const response = await api.delete<DELETETask>(`/tarefa?id=${params.id}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);

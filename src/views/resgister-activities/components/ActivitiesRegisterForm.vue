@@ -60,12 +60,13 @@
       <AppButton
         v-if="Object.keys(selectedActivity).length"
         is-full
+        @click="deleteTask"
       >
         Excluir
       </AppButton>
       <AppButton
         is-full
-        @click="save"
+        @click="saveTask"
       >
         Salvar
       </AppButton>
@@ -84,7 +85,7 @@ import AppSelect from "@/components/app-select/AppSelect.vue";
 import { useRegisterActivitiesStore } from "@/stores/RegisterActivitiesStore";
 import { storeToRefs } from "pinia";
 import MultipleChoice from "@/views/resgister-activities/components/MultipleChoice.vue";
-import { createTaskService } from "@/services/task/service";
+import { createTaskService, deleteTaskService } from "@/services/task/service";
 
 const appStore = useAppStore();
 const { handleLoading } = appStore;
@@ -118,7 +119,7 @@ const validateFields = () => {
   return isValid;
 };
 
-const save = async () => {
+const saveTask = async () => {
   const isValid = validateFields();
   if (!isValid) return;
 
@@ -136,6 +137,23 @@ const save = async () => {
 
   try {
     await createTaskService(payload);
+    handleShow();
+  } catch (error) {
+    console.error(error);
+  } finally {
+    handleLoading(false);
+  }
+};
+
+const deleteTask = async () => {
+  const params = {
+    id: selectedActivity.value.taskId
+  };
+
+  handleLoading(true);
+
+  try {
+    await deleteTaskService(params);
     handleShow();
   } catch (error) {
     console.error(error);

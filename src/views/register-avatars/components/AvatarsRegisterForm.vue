@@ -44,7 +44,7 @@
 
 <script lang="ts" setup>
 import { MinusIcon, PlusIcon } from "lucide-vue-next";
-import { ref, type Ref } from "vue";
+import { onUnmounted, ref, type Ref } from "vue";
 
 import AppButton from "@/components/app-button/AppButton.vue";
 import BackButton from "@/components/back-button/BackButton.vue";
@@ -57,7 +57,7 @@ import { getBase64 } from "@/utils";
 const registerAvatarsStore = useRegisterAvatarsStore();
 const appStore = useAppStore();
 const { handleLoading, handleModal } = appStore;
-const { handleShow } = registerAvatarsStore;
+const { handleShow, $resetRegisterAvatars } = registerAvatarsStore;
 
 const inputFile: Ref<HTMLInputElement | null> = ref(null);
 const imageFile = ref("");
@@ -111,6 +111,10 @@ const saveAvatar = async () => {
     handleLoading(false);
   }
 };
+
+onUnmounted(() => {
+  $resetRegisterAvatars();
+});
 </script>
 
 <style lang="scss">

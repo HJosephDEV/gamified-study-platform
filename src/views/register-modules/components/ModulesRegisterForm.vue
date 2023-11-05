@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, type Ref } from "vue";
+import { onMounted, onUnmounted, type Ref, ref } from "vue";
 
 import type { RegisterModuleFields } from "@/@types/views/RegisterModules";
 
@@ -56,7 +56,7 @@ import { storeToRefs } from "pinia";
 const registerModulesStore = useRegisterModulesStore();
 const appStore = useAppStore();
 const { handleLoading, handleModal } = appStore;
-const { handleShow } = registerModulesStore;
+const { handleShow, $resetRegisterModules } = registerModulesStore;
 const { selectedModule } = storeToRefs(registerModulesStore);
 
 const checkRequiredField = (fieldsParams: any, key: string) => {
@@ -177,6 +177,10 @@ onMounted(() => {
     fields.value.name.value = selectedModule.value.name;
     fields.value.description.value = selectedModule.value.description;
   }
+});
+
+onUnmounted(() => {
+  $resetRegisterModules();
 });
 </script>
 

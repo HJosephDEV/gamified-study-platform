@@ -70,10 +70,11 @@ export const useRegisterActivitiesStore = defineStore("registerActivitiesStore",
       validation: () => {
         const isFilled = checkRequiredField(validations.value, "content");
 
-        console.log(fields.value.content.value);
-        if (fields.value.type === 0 || !isFilled) return isFilled;
+        if (fields.value.type !== 1 || !isFilled) return isFilled;
 
-        const quantityVariables = fields.value.content.value.split("$variavel").length;
+        const quantityVariables = fields.value.content.value
+          .split(" ")
+          .filter((value) => value === "$variavel").length;
 
         validations.value.content.valid = !!quantityVariables;
         validations.value.content.feedback = quantityVariables
@@ -87,18 +88,27 @@ export const useRegisterActivitiesStore = defineStore("registerActivitiesStore",
       valid: true,
       feedback: "",
       validation: () => {
-        if (!fields.value.answers.length) return false;
+        if (!fields.value.answers.length) {
+          validations.value.answers.valid = false;
+          return false;
+        }
 
         let isValid = true;
 
         fields.value.answers.forEach((answer, i) => {
-          const status = !!answer.value;
-          fields.value.answers[i].valid = status;
-          fields.value.answers[i].feedback = status ? "" : "Campo obrigatório";
+          const isFilled = !!answer.value;
+          fields.value.answers[i].valid = isFilled;
+          fields.value.answers[i].feedback = isFilled ? "" : "Campo obrigatório";
 
-          if (fields.value.type === 1 && !!answer.value) {
-            const quantityVariables = fields.value.content.value.split("$variavel").length;
+          if (!isFilled) {
+            isValid = false;
+            return;
+          }
 
+          if (fields.value.type === 1) {
+            const quantityVariables = fields.value.content.value
+              .split(" ")
+              .filter((value) => value === "$variavel").length;
             const quantityWords = !answer.value ? 0 : answer.value.split(",").length;
 
             fields.value.answers[i].valid = quantityWords === quantityVariables;
@@ -106,12 +116,15 @@ export const useRegisterActivitiesStore = defineStore("registerActivitiesStore",
               quantityWords === quantityVariables
                 ? ""
                 : "A Quantidade de variáveis não corresponde";
-          }
 
-          if (isValid && !status) {
-            isValid = false;
+            isValid = quantityWords === quantityVariables;
+            return;
           }
         });
+
+        validations.value.answers.feedback =
+          !isValid && fields.value.type === 2 ? "Campo obrigatório" : "";
+        validations.value.answers.valid = isValid;
 
         return isValid;
       }

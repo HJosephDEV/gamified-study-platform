@@ -52,6 +52,7 @@ import BackButton from "@/components/back-button/BackButton.vue";
 import { useAppStore } from "@/stores/AppStore";
 import { useRegisterAvatarsStore } from "@/stores/RegisterAvatarsStore";
 import { createAvatarService } from "@/services/avatar/service";
+import { getBase64 } from "@/utils";
 
 const registerAvatarsStore = useRegisterAvatarsStore();
 const appStore = useAppStore();
@@ -84,15 +85,6 @@ const onChangeFileUpload = async (event: Event) => {
   // @ts-ignore
   imageFile.value = base64;
 };
-
-const getBase64 = async (file: File) =>
-  await new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    // @ts-ignore
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
-  });
 
 const saveAvatar = async () => {
   if (!imageFile.value)

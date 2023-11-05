@@ -46,6 +46,7 @@
       <h2>Respostas</h2>
 
       <MultipleChoice v-if="fields.type !== 2" />
+      <Draggable v-else />
 
       <br />
 
@@ -90,6 +91,7 @@ import { useRegisterActivitiesStore } from "@/stores/RegisterActivitiesStore";
 import { storeToRefs } from "pinia";
 import MultipleChoice from "@/views/resgister-activities/components/MultipleChoice.vue";
 import { createTaskService, deleteTaskService, editTaskService } from "@/services/task/service";
+import Draggable from "@/views/resgister-activities/components/Draggable.vue";
 
 const appStore = useAppStore();
 const { handleLoading } = appStore;
@@ -210,8 +212,22 @@ const fillMultipleChoice = () => {
   );
 };
 
+const fillDraggable = () => {
+  fields.value.type = selectedActivity.value.taskType;
+  fields.value.name.value = selectedActivity.value.taskName;
+  fields.value.exp.value = selectedActivity.value.taskExp;
+  fields.value.content.value = selectedActivity.value.taskContent;
+  fields.value.answers = selectedActivity.value.taskAnswers.map((taskAnswer) => ({
+    value: taskAnswer.answerDescription
+  }));
+  fields.value.correctAnswerIndex = selectedActivity.value.taskAnswers.findIndex(
+    (taskAnswer) => taskAnswer.correct
+  );
+};
+
 onMounted(() => {
   selectedActivity.value.taskType === 0 && fillMultipleChoice();
+  selectedActivity.value.taskType === 2 && fillDraggable();
 });
 
 watch(

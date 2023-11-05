@@ -1,6 +1,14 @@
 <template>
   <div class="activities-register-form__multiple-choice">
     <h2 class="activities-register-form__title">Respostas</h2>
+
+    <span
+      v-if="fields.type === 1"
+      class="activities-register-form__sentence-answers-help"
+    >
+      Separe as respostas por
+      <bold>vírgula</bold> e organize na <bold>ordem</bold> que irão aparecer no conteúdo.
+    </span>
     <div class="activities-register-form__multiple-choice-fields">
       <div
         v-for="(answer, index) in fields.answers"
@@ -90,8 +98,18 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .activities-register-form__multiple-choice {
+  display: flex;
+  flex-direction: column;
+
   .activities-register-form__title {
     margin: 36px 0 24px;
+  }
+
+  .activities-register-form__sentence-answers-help {
+    line-height: normal;
+    font-size: 12px;
+    color: #fee500;
+    margin-bottom: 16px;
   }
 
   .activities-register-form__multiple-choice-fields {

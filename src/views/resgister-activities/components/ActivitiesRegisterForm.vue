@@ -31,6 +31,13 @@
         @update:input-value="(newValue) => (fields.exp.value = newValue)"
       />
 
+      <span
+        v-if="fields.type === 1"
+        class="activities-register-form__sentence-helper"
+      >
+        Escreva o conteúdo da pergunta e coloque <bold>$variavel</bold> onde ficarão as respostas.
+      </span>
+
       <FormInput
         :input-label="fields.content.label"
         :input-value="fields.content.value"
@@ -281,6 +288,13 @@ watch(
         }
       }
     }
+  }
+
+  .activities-register-form__sentence-helper {
+    line-height: normal;
+    font-size: 12px;
+    color: #fee500;
+    margin-top: 16px;
   }
 
   .activities-register-form__define-answer {

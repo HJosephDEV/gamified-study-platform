@@ -75,7 +75,7 @@ export const useRegisterActivitiesStore = defineStore("registerActivitiesStore",
 
         const quantityVariables = fields.value.content.value
           .split(" ")
-          .filter((value) => value === "$variavel").length;
+          .filter((value) => value?.includes("$variavel")).length;
 
         validations.value.content.valid = !!quantityVariables;
         validations.value.content.feedback = quantityVariables

@@ -19,7 +19,7 @@
 
         <div
           class="activities-register-form__container-buttons-fields"
-          :style="`padding-bottom: ${!answer.valid ? '11px' : '0'}`"
+          :style="`padding-bottom: ${!answer.valid ? '17px' : '0'}`"
         >
           <AppButton
             v-if="index === fields.answers.length - 1 && fields.answers.length < 4"

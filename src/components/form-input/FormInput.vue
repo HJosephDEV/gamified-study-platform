@@ -54,7 +54,7 @@ const updateInputValue = (e: Event) => {
 
   label {
     color: #fff;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 400;
     line-height: normal;
   }
@@ -86,9 +86,10 @@ const updateInputValue = (e: Event) => {
 
   span {
     color: #ff6363;
-    font-size: 7px;
+    font-size: 9px;
     font-weight: 400;
     margin-top: 4px;
+    line-height: normal;
   }
 }
 </style>

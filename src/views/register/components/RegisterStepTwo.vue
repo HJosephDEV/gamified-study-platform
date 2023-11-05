@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts" setup>
-import { inject, ref, computed, nextTick, onMounted, type Ref } from "vue";
+import { computed, inject, nextTick, onMounted, ref, type Ref } from "vue";
 import { storeToRefs } from "pinia";
 
 import type { ProfileProps } from "@/@types/components/CharacterModal";
@@ -46,7 +46,7 @@ import type { ProviderAppProps } from "@/@types/providers/App";
 
 import { useUserStore } from "@/stores/UserStore";
 import { useAppStore } from "@/stores/AppStore";
-import { useRegisterStore } from "@/stores/RegisterStore";
+import { useRegisterStore } from "../../../stores/RegisterStore";
 import type { UserProps } from "@/@types/services/UserService";
 import { getAvatarsService } from "@/services/avatar/service";
 import { loginUserService, registerUserService } from "@/services/user/service";
@@ -82,7 +82,7 @@ const getAvatars = async () => {
       id: avatar.id,
       src: avatar.url,
       selected: avatar.selecionado,
-      blocked: avatar.desbloqueado
+      blocked: !avatar.desbloqueado
     }));
     profileList.value = [...replacedList];
     profileList.value[0].selected = true;

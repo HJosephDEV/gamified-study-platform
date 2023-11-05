@@ -168,8 +168,8 @@ onUnmounted(() => {
       border: 2px solid #fff;
 
       img {
+        height: 100%;
         max-width: 100%;
-        max-height: 100%;
         background-size: cover;
       }
     }

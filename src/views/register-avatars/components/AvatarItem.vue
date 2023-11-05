@@ -1,7 +1,9 @@
 <template>
   <div class="avatar-item__container">
     <div class="avatar-item__image-wrapper">
-      <div class="avatar-item__delete"><XIcon /></div>
+      <div class="avatar-item__delete">
+        <XIcon />
+      </div>
       <img :src="src" />
     </div>
     <span>Level {{ requiredLevel }}</span>
@@ -49,7 +51,7 @@ const { src, requiredLevel } = defineProps<AvatarItemProps>();
 
     img {
       max-width: 100%;
-      max-height: 100%;
+      height: 100%;
       object-fit: cover;
     }
 

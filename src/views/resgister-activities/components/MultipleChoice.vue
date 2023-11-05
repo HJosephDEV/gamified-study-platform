@@ -1,33 +1,38 @@
 <template>
-  <div
-    v-for="(answer, index) in fields.answers"
-    :key="`answer-${index}`"
-    class="activities-register-form__multiple-choice-fields"
-  >
-    <FormInput
-      :input-label="`Resposta ${index + 1}`"
-      :input-value="answer.value"
-      :input-type="answer.type"
-      :input-status="answer.valid"
-      :input-placeholder="answer.placeholder"
-      :input-feedback="answer.feedback"
-      @update:input-value="(newValue) => (answer.value = newValue)"
-    />
+  <div class="activities-register-form__multiple-choice">
+    <h2 class="activities-register-form__title">Respostas</h2>
+    <div class="activities-register-form__multiple-choice-fields">
+      <div
+        v-for="(answer, index) in fields.answers"
+        :key="`answer-${index}`"
+        class="activities-register-form__multiple-choice-field"
+      >
+        <FormInput
+          :input-label="`Resposta ${index + 1}`"
+          :input-value="answer.value"
+          :input-type="answer.type"
+          :input-status="answer.valid"
+          :input-placeholder="answer.placeholder"
+          :input-feedback="answer.feedback"
+          @update:input-value="(newValue) => (answer.value = newValue)"
+        />
 
-    <div
-      class="activities-register-form__container-buttons-fields"
-      :style="`padding-bottom: ${!answer.valid ? '11px' : '0'}`"
-    >
-      <AppButton
-        v-if="index === fields.answers.length - 1 && fields.answers.length < 4"
-        @click="addAnswer"
-        >+
-      </AppButton>
-      <AppButton
-        v-if="fields.answers.length > 2"
-        @click="removeAnswer(index)"
-        >-
-      </AppButton>
+        <div
+          class="activities-register-form__container-buttons-fields"
+          :style="`padding-bottom: ${!answer.valid ? '17px' : '0'}`"
+        >
+          <AppButton
+            v-if="index === fields.answers.length - 1 && fields.answers.length < 4"
+            @click="addAnswer"
+            >+
+          </AppButton>
+          <AppButton
+            v-if="fields.answers.length > 2"
+            @click="removeAnswer(index)"
+            >-
+          </AppButton>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -84,25 +89,17 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.activities-register-form__container {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 36px;
-
-  .activities-register-form__card-header {
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
+.activities-register-form__multiple-choice {
+  .activities-register-form__title {
+    margin: 36px 0 24px;
   }
 
-  .activities-register-form__form {
-    width: 100%;
+  .activities-register-form__multiple-choice-fields {
     display: flex;
     flex-direction: column;
     gap: 16px;
 
-    .activities-register-form__multiple-choice-fields {
+    .activities-register-form__multiple-choice-field {
       display: flex;
       align-items: flex-end;
       gap: 8px;
@@ -117,12 +114,6 @@ onMounted(() => {
         }
       }
     }
-  }
-
-  .activities-register-form__buttons {
-    width: 100%;
-    display: flex;
-    gap: 24px;
   }
 }
 </style>

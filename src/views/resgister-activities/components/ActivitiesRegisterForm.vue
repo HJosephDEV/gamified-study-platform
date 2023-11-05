@@ -42,15 +42,13 @@
         @update:input-value="(newValue) => (fields.content.value = newValue)"
       />
 
-      <br />
-      <h2>Respostas</h2>
-
       <MultipleChoice v-if="fields.type !== 2" />
       <Draggable v-else />
 
-      <br />
-
-      <div v-if="fields.answers.length > 1">
+      <div
+        v-if="fields.answers.length > 1"
+        class="activities-register-form__define-answer"
+      >
         <h3>Definir resposta</h3>
 
         <AppSelect
@@ -282,6 +280,12 @@ watch(
           height: 34px;
         }
       }
+    }
+  }
+
+  .activities-register-form__define-answer {
+    h3 {
+      margin: 36px 0 24px;
     }
   }
 

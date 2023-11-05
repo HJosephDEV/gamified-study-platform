@@ -68,11 +68,19 @@ export const useRegisterActivitiesStore = defineStore("registerActivitiesStore",
       valid: true,
       feedback: "",
       validation: () => {
-        if (fields.value.type === 0) {
-          return checkRequiredField(validations.value, "content");
-        }
+        const isFilled = checkRequiredField(validations.value, "content");
 
-        return true;
+        console.log(fields.value.content.value);
+        if (fields.value.type === 0 || !isFilled) return isFilled;
+
+        const quantityVariables = fields.value.content.value.split("$variavel").length;
+
+        validations.value.content.valid = !!quantityVariables;
+        validations.value.content.feedback = quantityVariables
+          ? ""
+          : "Não possui ao menos 1 variável";
+
+        return !!quantityVariables;
       }
     },
     answers: {
@@ -87,6 +95,18 @@ export const useRegisterActivitiesStore = defineStore("registerActivitiesStore",
           const status = !!answer.value;
           fields.value.answers[i].valid = status;
           fields.value.answers[i].feedback = status ? "" : "Campo obrigatório";
+
+          if (fields.value.type === 1 && !!answer.value) {
+            const quantityVariables = fields.value.content.value.split("$variavel").length;
+
+            const quantityWords = !answer.value ? 0 : answer.value.split(",").length;
+
+            fields.value.answers[i].valid = quantityWords === quantityVariables;
+            fields.value.answers[i].feedback =
+              quantityWords === quantityVariables
+                ? ""
+                : "A Quantidade de variáveis não corresponde";
+          }
 
           if (isValid && !status) {
             isValid = false;
@@ -107,29 +127,25 @@ export const useRegisterActivitiesStore = defineStore("registerActivitiesStore",
     showActivities.value = true;
     showForm.value = false;
     selectedActivity.value = {} as TaskProps;
+
     fields.value = {
       type: 0,
       name: {
-        label: "Nome da atividade",
-        value: "",
-        type: "text",
-        placeholder: "Digite aqui"
+        ...fields.value.name,
+        value: ""
       },
       exp: {
-        label: "Quantidade de exp",
-        value: 1,
-        type: "number",
-        placeholder: "Digite aqui"
+        ...fields.value.exp,
+        value: 1
       },
       content: {
-        label: "Conteúdo da atividade",
-        value: "",
-        type: "text",
-        placeholder: "Digite aqui"
+        ...fields.value.content,
+        value: ""
       },
       answers: [],
       correctAnswerIndex: 0
     };
+
     validations.value = {
       type: {
         valid: true,
@@ -137,57 +153,29 @@ export const useRegisterActivitiesStore = defineStore("registerActivitiesStore",
         validation: () => fields.value.type !== null
       },
       name: {
+        ...validations.value.name,
         valid: true,
-        feedback: "",
-        validation: () => checkRequiredField(validations.value, "name")
+        feedback: ""
       },
       exp: {
+        ...validations.value.exp,
         valid: true,
-        feedback: "",
-        validation: () => {
-          const isValid = fields.value.exp.value > 0;
-          validations.value.exp.valid = isValid;
-          validations.value.exp.feedback = isValid ? "" : "Campo obrigatório";
-
-          return isValid;
-        }
+        feedback: ""
       },
       content: {
+        ...validations.value.content,
         valid: true,
-        feedback: "",
-        validation: () => {
-          if (fields.value.type === 0) {
-            return checkRequiredField(validations.value, "content");
-          }
-
-          return true;
-        }
+        feedback: ""
       },
       answers: {
+        ...validations.value.answers,
         valid: true,
-        feedback: "",
-        validation: () => {
-          if (!fields.value.answers.length) return false;
-
-          let isValid = true;
-
-          fields.value.answers.forEach((answer, i) => {
-            const status = !!answer.value;
-            fields.value.answers[i].valid = status;
-            fields.value.answers[i].feedback = status ? "" : "Campo obrigatório";
-
-            if (isValid && !status) {
-              isValid = false;
-            }
-          });
-
-          return isValid;
-        }
+        feedback: ""
       },
       correctAnswerIndex: {
+        ...validations.value.correctAnswerIndex,
         valid: true,
-        feedback: "",
-        validation: () => fields.value.correctAnswerIndex !== null
+        feedback: ""
       }
     };
   };
@@ -196,53 +184,47 @@ export const useRegisterActivitiesStore = defineStore("registerActivitiesStore",
     fields.value = {
       ...fields.value,
       content: {
-        label: "Conteúdo da atividade",
-        value: "",
-        type: "text",
-        placeholder: "Digite aqui"
+        ...fields.value.content,
+        value: ""
       },
-      answers: [],
+      answers:
+        fields.value.type !== 2
+          ? [
+              {
+                value: "",
+                type: "text",
+                placeholder: "Digite aqui",
+                valid: true,
+                feedback: ""
+              },
+              {
+                value: "",
+                type: "text",
+                placeholder: "Digite aqui",
+                valid: true,
+                feedback: ""
+              }
+            ]
+          : [],
       correctAnswerIndex: 0
     };
 
     validations.value = {
       ...validations.value,
       content: {
+        ...validations.value.content,
         valid: true,
-        feedback: "",
-        validation: () => {
-          if (fields.value.type === 0) {
-            return checkRequiredField(validations.value, "content");
-          }
-
-          return true;
-        }
+        feedback: ""
       },
       answers: {
+        ...validations.value.answers,
         valid: true,
-        feedback: "",
-        validation: () => {
-          if (!fields.value.answers.length) return false;
-
-          let isValid = true;
-
-          fields.value.answers.forEach((answer, i) => {
-            const status = !!answer.value;
-            fields.value.answers[i].valid = status;
-            fields.value.answers[i].feedback = status ? "" : "Campo obrigatório";
-
-            if (isValid && !status) {
-              isValid = false;
-            }
-          });
-
-          return isValid;
-        }
+        feedback: ""
       },
       correctAnswerIndex: {
+        ...validations.value.correctAnswerIndex,
         valid: true,
-        feedback: "",
-        validation: () => fields.value.correctAnswerIndex !== null
+        feedback: ""
       }
     };
   };

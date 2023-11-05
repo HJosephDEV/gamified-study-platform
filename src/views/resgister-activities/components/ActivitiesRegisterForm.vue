@@ -45,7 +45,8 @@
       <br />
       <h2>Respostas</h2>
 
-      <MultipleChoice v-if="fields.type === 0" />
+      <MultipleChoice v-if="fields.type !== 2" />
+
       <br />
 
       <div v-if="fields.answers.length > 1">

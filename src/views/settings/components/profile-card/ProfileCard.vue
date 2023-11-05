@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, type Ref } from "vue";
+import { computed, onMounted, ref, type Ref } from "vue";
 import type { ProfileProps } from "@/@types/components/CharacterModal";
 import AppButton from "@/components/app-button/AppButton.vue";
 import CharactersModal from "@/components/characters-modal/CharactersModal.vue";
@@ -72,7 +72,7 @@ const getAvatars = async () => {
       id: avatar.id,
       src: avatar.url,
       selected: avatar.selecionado,
-      blocked: avatar.desbloqueado
+      blocked: !avatar.desbloqueado
     }));
     profileList.value = [...replacedList];
   } catch (error) {
@@ -120,15 +120,17 @@ onMounted(() => {
   .profile-card__container {
     display: flex;
     gap: 24px;
+
     .profile-card__profile-photo {
       min-width: 108px;
-      min-width: 108px;
-      height: 108px;
-      height: 108px;
+      min-height: 108px;
+      max-width: 108px;
+      max-height: 108px;
 
       img {
         max-width: 100%;
-        max-height: 100%;
+        height: 100%;
+        object-fit: cover;
       }
     }
 
@@ -137,6 +139,7 @@ onMounted(() => {
       flex-direction: column;
       justify-content: space-between;
       overflow: hidden;
+
       .profile-card__profile-infos {
         display: flex;
         flex-direction: column;
@@ -152,9 +155,11 @@ onMounted(() => {
         .profile-card__profile-name {
           font-size: 12px;
         }
+
         .profile-card__profile-username {
           font-size: 12px;
         }
+
         .profile-card__profile-level {
           font-size: 10px;
         }
@@ -184,6 +189,7 @@ onMounted(() => {
       flex-direction: column;
       justify-content: space-between;
       gap: 12px;
+
       .profile-card__profile-infos {
         display: flex;
         flex-direction: column;
@@ -199,9 +205,11 @@ onMounted(() => {
         .profile-card__profile-name {
           font-size: 12px;
         }
+
         .profile-card__profile-username {
           font-size: 12px;
         }
+
         .profile-card__profile-level {
           font-size: 10px;
         }

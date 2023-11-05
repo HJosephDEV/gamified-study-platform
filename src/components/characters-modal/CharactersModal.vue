@@ -14,9 +14,16 @@
         <div
           v-for="(profile, index) in profileList"
           :key="`profile-${index}`"
-          :class="['characters-modal__item', { selected: profile.selected }]"
-          @click="handleSelectProfile(profile.id)"
+          :class="[
+            'characters-modal__item',
+            { selected: profile.selected, blocked: profile.blocked }
+          ]"
+          @click="!profile.blocked && handleSelectProfile(profile.id)"
         >
+          <div
+            v-if="profile.blocked"
+            class="characters-modal__mask"
+          />
           <img
             :src="profile.src"
             alt="Foto de Perfil"
@@ -29,8 +36,8 @@
 
 <script lang="ts" setup>
 import type {
-  CharacterModalProps,
-  CharacterModalEmitProps
+  CharacterModalEmitProps,
+  CharacterModalProps
 } from "@/@types/components/CharacterModal";
 
 import { XSquare } from "lucide-vue-next";
@@ -133,19 +140,34 @@ const handleSelectProfile = (id: number | string) => {
         height: 59.2px;
         width: 59.2px;
         cursor: pointer;
+        position: relative;
 
         &.selected {
           border: 3px solid #ffe500 !important;
         }
 
+        .characters-modal__mask {
+          width: 100%;
+          height: 100%;
+          background: #212121;
+          opacity: 0.75;
+          position: absolute;
+          left: 0;
+          top: 0;
+        }
+
         img {
           max-width: 100%;
-          max-height: 100%;
+          height: 100%;
           object-fit: cover;
         }
 
         &:hover {
           border: 3px solid #fff;
+
+          &.blocked {
+            border: 0;
+          }
         }
       }
     }

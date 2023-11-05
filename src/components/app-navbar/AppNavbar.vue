@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import router from "@/router";
 
 import { Heart } from "lucide-vue-next";
@@ -105,6 +105,7 @@ onMounted(() => {
     display: flex;
     gap: 16px;
     cursor: pointer;
+
     .app-navbar__profile-infos {
       display: flex;
       flex-direction: column;
@@ -114,6 +115,7 @@ onMounted(() => {
         display: flex;
         flex-direction: column;
         align-items: end;
+
         .app-navbar__profile-name {
           color: #ffe500;
           font-size: 12px;
@@ -158,9 +160,11 @@ onMounted(() => {
       max-width: 60px;
       max-height: 60px;
       border: 1px solid #ffe500;
+
       img {
+        height: 100%;
         max-width: 100%;
-        max-height: 100%;
+        object-fit: cover;
       }
     }
   }

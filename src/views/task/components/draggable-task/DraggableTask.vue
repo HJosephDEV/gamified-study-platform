@@ -224,19 +224,23 @@ onUnmounted(() => {
     gap: 16px;
 
     .drag-el {
+      max-width: 320px;
       min-height: 200px;
-      width: 320px;
+      width: 100%;
 
       img {
         max-width: 100%;
+        width: 100%;
+        height: 100%;
         object-fit: cover;
       }
     }
   }
 
   .draggable-task__drop-zone {
-    width: 320px;
+    max-width: 320px;
     min-height: 200px;
+    width: 100%;
     border: 3px solid #fee500;
     padding: 8px;
     border-radius: 8px;
@@ -248,6 +252,8 @@ onUnmounted(() => {
 
       img {
         max-width: 100%;
+        width: 100%;
+        height: 100%;
         object-fit: cover;
         border-radius: 8px;
       }

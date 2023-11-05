@@ -109,7 +109,7 @@ export const useRegisterActivitiesStore = defineStore("registerActivitiesStore",
           if (fields.value.type === 1) {
             const quantityVariables = fields.value.content.value
               .split(" ")
-              .filter((value) => value === "$variavel").length;
+              .filter((value) => value?.includes("$variavel")).length;
             const quantityWords = !answer.value ? 0 : answer.value.split(",").length;
 
             fields.value.answers[i].valid = quantityWords === quantityVariables;

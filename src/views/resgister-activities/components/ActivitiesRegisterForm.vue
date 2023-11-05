@@ -80,7 +80,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, nextTick, onMounted, ref, watch } from "vue";
 
 import AppButton from "@/components/app-button/AppButton.vue";
 import BackButton from "@/components/back-button/BackButton.vue";
@@ -98,7 +98,7 @@ const { handleLoading } = appStore;
 
 const registerActivitiesStore = useRegisterActivitiesStore();
 const { handleShow, cleanContentAndAnswers } = registerActivitiesStore;
-const { fields, selectedActivity, validations, selectedModule } =
+const { fields, selectedActivity, validations, selectedModule, isGettingData } =
   storeToRefs(registerActivitiesStore);
 
 const typesList = ref([
@@ -196,6 +196,7 @@ const deleteTask = async () => {
 };
 
 const fillMultipleChoice = () => {
+  isGettingData.value = true;
   fields.value.type = selectedActivity.value.taskType;
   fields.value.name.value = selectedActivity.value.taskName;
   fields.value.exp.value = selectedActivity.value.taskExp;
@@ -210,9 +211,12 @@ const fillMultipleChoice = () => {
   fields.value.correctAnswerIndex = selectedActivity.value.taskAnswers.findIndex(
     (taskAnswer) => taskAnswer.correct
   );
+
+  nextTick(() => (isGettingData.value = false));
 };
 
 const fillDraggable = () => {
+  isGettingData.value = true;
   fields.value.type = selectedActivity.value.taskType;
   fields.value.name.value = selectedActivity.value.taskName;
   fields.value.exp.value = selectedActivity.value.taskExp;
@@ -223,17 +227,24 @@ const fillDraggable = () => {
   fields.value.correctAnswerIndex = selectedActivity.value.taskAnswers.findIndex(
     (taskAnswer) => taskAnswer.correct
   );
+
+  nextTick(() => (isGettingData.value = false));
 };
 
 onMounted(() => {
-  selectedActivity.value.taskType === 0 && fillMultipleChoice();
-  selectedActivity.value.taskType === 2 && fillDraggable();
+  Object.keys(selectedActivity.value).length &&
+    selectedActivity.value.taskType !== 2 &&
+    fillMultipleChoice();
+
+  Object.keys(selectedActivity.value).length &&
+    selectedActivity.value.taskType === 2 &&
+    fillDraggable();
 });
 
 watch(
   () => fields.value.type,
   () => {
-    cleanContentAndAnswers();
+    !isGettingData.value && cleanContentAndAnswers();
   }
 );
 </script>

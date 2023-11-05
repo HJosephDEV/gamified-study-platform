@@ -76,7 +76,9 @@ const removeAnswer = (index: number) => {
 };
 
 onMounted(() => {
-  fields.value.answers = [{ value: "" }, { value: "" }];
+  fields.value.answers = fields.value.answers.length
+    ? [...fields.value.answers]
+    : [{ value: "" }, { value: "" }];
 });
 </script>
 

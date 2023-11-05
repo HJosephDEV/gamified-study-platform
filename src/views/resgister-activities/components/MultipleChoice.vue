@@ -62,22 +62,24 @@ const removeAnswer = (index: number) => {
 };
 
 onMounted(() => {
-  fields.value.answers = [
-    {
-      value: "",
-      type: "text",
-      placeholder: "Digite aqui",
-      valid: true,
-      feedback: ""
-    },
-    {
-      value: "",
-      type: "text",
-      placeholder: "Digite aqui",
-      valid: true,
-      feedback: ""
-    }
-  ];
+  fields.value.answers = fields.value.answers.length
+    ? [...fields.value.answers]
+    : [
+        {
+          value: "",
+          type: "text",
+          placeholder: "Digite aqui",
+          valid: true,
+          feedback: ""
+        },
+        {
+          value: "",
+          type: "text",
+          placeholder: "Digite aqui",
+          valid: true,
+          feedback: ""
+        }
+      ];
 });
 </script>
 

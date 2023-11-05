@@ -19,9 +19,13 @@ import { storeToRefs } from "pinia";
 import ActivitiesList from "./components/ActivitiesList.vue";
 import ActivitiesRegisterForm from "./components/ActivitiesRegisterForm.vue";
 import { useRegisterActivitiesStore } from "@/stores/RegisterActivitiesStore";
+import { onUnmounted } from "vue";
 
 const registerActivitiesStore = useRegisterActivitiesStore();
+const { $resetRegisterActivities } = registerActivitiesStore;
 const { showActivities, showForm, selectedActivity } = storeToRefs(registerActivitiesStore);
+
+onUnmounted(() => $resetRegisterActivities());
 </script>
 
 <style lang="scss" scoped>

@@ -9,6 +9,7 @@ export const useRegisterActivitiesStore = defineStore("registerActivitiesStore",
   const showForm = ref(false);
   const selectedActivity = ref({} as TaskProps);
   const selectedModule: Ref<number | null> = ref(null);
+  const isGettingData = ref(false);
 
   const fields: Ref<RegisterActivitiesFieldsProps> = ref({
     type: 0,
@@ -256,6 +257,7 @@ export const useRegisterActivitiesStore = defineStore("registerActivitiesStore",
     showForm,
     selectedActivity,
     selectedModule,
+    isGettingData,
     handleShow,
     cleanContentAndAnswers,
     $resetRegisterActivities

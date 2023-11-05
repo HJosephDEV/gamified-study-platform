@@ -4,6 +4,30 @@
   box-sizing: border-box;
   font-family: "Poppins", sans-serif !important;
   color: #fff;
+
+  &::-webkit-scrollbar {
+    width: 9px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #222222;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #fee500;
+    border-radius: 20px;
+    border: 2px solid #222222;
+  }
+
+  &::selection {
+    background: #000;
+    color: #fee500;
+  }
+
+  &::-moz-selection {
+    background: #000;
+    color: #fee500;
+  }
 }
 
 .app-content {

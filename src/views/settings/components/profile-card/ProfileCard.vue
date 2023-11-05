@@ -123,13 +123,14 @@ onMounted(() => {
 
     .profile-card__profile-photo {
       min-width: 108px;
-      min-width: 108px;
-      height: 108px;
-      height: 108px;
+      min-height: 108px;
+      max-width: 108px;
+      max-height: 108px;
 
       img {
         max-width: 100%;
-        max-height: 100%;
+        height: 100%;
+        object-fit: cover;
       }
     }
 

@@ -2,21 +2,42 @@
   <div class="form-input__container">
     <label>{{ inputLabel }}</label>
     <input
+      v-if="inputModelLocal === 'input'"
       :class="[{ 'is-invalid': !inputStatus }]"
       :type="inputType"
       :value="inputValue"
       :placeholder="inputPlaceholder"
       @input="updateInputValue"
     />
+    <textarea
+      v-if="inputModelLocal === 'textarea'"
+      rows="5"
+      :class="[{ 'is-invalid': !inputStatus }]"
+      :type="inputType"
+      :value="inputValue"
+      :placeholder="inputPlaceholder"
+      @input="updateInputValue"
+    />
+
     <span v-if="!inputStatus && !!inputFeedback">{{ inputFeedback }}</span>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { type InputProps, type EmitsProps } from "@/@types/components/FormInput";
+import { type EmitsProps, type InputProps } from "@/@types/components/FormInput";
+import { ref } from "vue";
 
-const { inputLabel, inputValue, inputType, inputFeedback, inputStatus, inputPlaceholder } =
-  defineProps<InputProps>();
+const {
+  inputLabel,
+  inputValue,
+  inputType,
+  inputFeedback,
+  inputStatus,
+  inputPlaceholder,
+  inputModel
+} = defineProps<InputProps>();
+
+const inputModelLocal = ref(inputModel || "input");
 
 const emit = defineEmits<EmitsProps>();
 
@@ -38,8 +59,10 @@ const updateInputValue = (e: Event) => {
     line-height: normal;
   }
 
-  input {
-    width: 100%;
+  input,
+  textarea {
+    max-width: 100%;
+    min-width: 100%;
     padding: 6px 12px;
     border-radius: 5px;
     background: #fff;
@@ -55,6 +78,7 @@ const updateInputValue = (e: Event) => {
     &::placeholder {
       color: #a8a8a8;
     }
+
     &.is-invalid {
       border-color: #ff6363;
     }

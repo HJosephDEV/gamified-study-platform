@@ -2,6 +2,7 @@ export type AnswerProps = {
   answerId: number;
   answerDescription: string;
   taskId: number;
+  correct: boolean;
 };
 
 export type TaskProps = {
@@ -9,6 +10,7 @@ export type TaskProps = {
   taskName: string;
   taskContent: string;
   taskType: number;
+  taskExp: number;
   taskAnswers: AnswerProps[];
 };
 

@@ -8,3 +8,12 @@ export const isEmail = (email: string): boolean => {
   const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/gm;
   return regex.test(email);
 };
+
+export const getBase64 = async (file: File) =>
+  await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    // @ts-ignore
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+  });

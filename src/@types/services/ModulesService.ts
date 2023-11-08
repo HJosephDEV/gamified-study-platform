@@ -4,6 +4,12 @@ type Module = {
   descricao: string;
 };
 
+type AllModules = {
+  modulos_disponiveis: Module[];
+  modulos_em_andamento: Module[];
+  modulos_finalizados: Module[];
+};
+
 export type POSTCreateModule = {
   message: string;
   data: Module;
@@ -12,6 +18,11 @@ export type POSTCreateModule = {
 export type GETModules = {
   message: string;
   data: Module[];
+};
+
+export type GETAllModules = {
+  message: string;
+  data: AllModules;
 };
 
 export type GETInitializedModules = GETModules;

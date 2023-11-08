@@ -3,6 +3,7 @@ import type {
   DELETEModule,
   DELETEModuleParams,
   GETInitializedModules,
+  GETAllModules,
   GETModuleTasks,
   GETModuleTasksParams,
   GETModules,
@@ -24,6 +25,15 @@ export const getInitializedModulesService = async (): Promise<GETInitializedModu
 export const getModulesService = async (): Promise<GETModules> => {
   try {
     const response = await api.get<GETModules>("/modulos");
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const getAllModulesService = async (): Promise<GETAllModules> => {
+  try {
+    const response = await api.get<GETAllModules>("/modulos-curso");
     return response.data;
   } catch (error) {
     return Promise.reject(error);

@@ -9,16 +9,16 @@
     ]"
   >
     <ModulesSection
+      class="dashboard-page__available-modules"
+      section-title="Módulos disponíveis"
+      :modules="avaliabledModulesList"
+    />
+
+    <ModulesSection
       v-if="initializedModulesList.length > 0"
       class="dashboard-page__modules-in-progress"
       section-title="Módulos em andamento"
       :modules="initializedModulesList"
-    />
-
-    <ModulesSection
-      class="dashboard-page__available-modules"
-      section-title="Módulos disponíveis"
-      :modules="avaliabledModulesList"
     />
 
     <ModulesSection
@@ -129,22 +129,22 @@ onMounted(() => {
 
   &.--with-initialized-modules {
     grid-template:
-      "progress ranking" auto
       "available ranking" auto
+      "progress ranking" auto
       / 1fr 351px;
   }
 
   &.--with-finalized-modules {
     grid-template:
-      "progress ranking" auto
+      "available ranking" auto
       "finalized ranking" auto
       / 1fr 351px;
   }
 
   &.--with-initialized-modules.--with-finalized-modules {
     grid-template:
-      "progress ranking" auto
       "available ranking" auto
+      "progress ranking" auto
       "finalized ranking" auto
       / 1fr 351px;
   }

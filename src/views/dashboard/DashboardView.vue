@@ -4,7 +4,7 @@
       'dashboard-page__container',
       {
         '--with-initialized-modules': initializedModulesList.length > 0,
-        '--with-finalized-modules': initializedModulesList.length > 0
+        '--with-finalized-modules': finalizedModulesList.length > 0
       }
     ]"
   >

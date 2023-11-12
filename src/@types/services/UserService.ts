@@ -49,6 +49,8 @@ export type RegisterParams = {
   id_avatar: number;
 };
 
+export type PUTChangeInfos = POSTEmailOrLoginError;
+
 export type ChangeInfosPayload = {
   nome: string;
   sobrenome: string;
@@ -78,6 +80,7 @@ export type POSTEmailOrLoginError = {
   email: string;
 };
 
+
 export type POSTEmailOrLoginErrorPayload = {
   login: string;
   email: string;
@@ -87,3 +90,4 @@ export type GETValidateLifes = {
   message: string;
   bloquear: false;
 };
+

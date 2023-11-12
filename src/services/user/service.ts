@@ -12,7 +12,7 @@ import type {
   LoginProps,
   RegisterParams,
   GETValidateLifes,
-  UserProps
+  UserProps, PUTChangeInfos
 } from "@/@types/services/UserService";
 
 import { useAppStore } from "@/stores/AppStore";
@@ -57,9 +57,9 @@ export const changeAvatarUserService = async (
   }
 };
 
-export const changeUserInfosService = async (payload: ChangeInfosPayload): Promise<void> => {
+export const changeUserInfosService = async (payload: ChangeInfosPayload): Promise<PUTChangeInfos> => {
   try {
-    const response = await api.put<void>("usuario/trocar-dados", payload);
+    const response = await api.put<PUTChangeInfos>("usuario/trocar-dados", payload);
     return response.data;
   } catch (error) {
     return Promise.reject(error);

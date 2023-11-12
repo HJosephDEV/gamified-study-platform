@@ -38,7 +38,7 @@ import { changeUserInfosService, getUser } from "@/services/user/service";
 
 const appStore = useAppStore();
 const userStore = useUserStore();
-const { handleLoading } = appStore;
+const { handleLoading, handleModal } = appStore;
 const { userData } = userStore;
 
 const checkRequiredField = (fieldsParam: InfoFields, key: string) => {
@@ -132,11 +132,18 @@ const changeUserInfos = async () => {
   handleLoading(true);
 
   try {
-    await changeUserInfosService(payload);
-    await getUser();
+    const {email, login} = await changeUserInfosService(payload);
+
+    if(!!email || !!login) {
+      handleModal({active: true, title: "Alerta!", text: email || login, timeClose: 3500});
+      return;
+    }
+
+    !email && !login && await getUser();
   } catch (error) {
     console.error(error);
-    handleLoading(false);
+  } finally {
+     handleLoading(false);
   }
 };
 

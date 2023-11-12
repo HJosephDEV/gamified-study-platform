@@ -94,35 +94,28 @@ export const useRegisterActivitiesStore = defineStore("registerActivitiesStore",
           return false;
         }
 
-        let isValid = true;
-
         fields.value.answers.forEach((answer, i) => {
           const isFilled = !!answer.value;
           fields.value.answers[i].valid = isFilled;
           fields.value.answers[i].feedback = isFilled ? "" : "Campo obrigatório";
 
-          if (!isFilled) {
-            isValid = false;
-            return;
-          }
+          if (!isFilled) return;
 
           if (fields.value.type === 1) {
             const quantityVariables = fields.value.content.value
               .split(" ")
               .filter((value) => value?.includes("$variavel")).length;
             const quantityWords = !answer.value ? 0 : answer.value.split(",").length;
-
             fields.value.answers[i].valid = quantityWords === quantityVariables;
             fields.value.answers[i].feedback =
               quantityWords === quantityVariables
                 ? ""
                 : "A Quantidade de variáveis não corresponde";
-
-            isValid = quantityWords === quantityVariables;
-            return;
           }
         });
 
+        const answersValidationsList = fields.value.answers.map(answer => answer.valid);
+        const isValid = !answersValidationsList.includes(false);
         validations.value.answers.feedback =
           !isValid && fields.value.type === 2 ? "Campo obrigatório" : "";
         validations.value.answers.valid = isValid;

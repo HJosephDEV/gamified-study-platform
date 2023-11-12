@@ -21,7 +21,7 @@ api.interceptors.response.use(
   },
   (error) => {
     // @ts-ignore
-    if (error.response.status === 401) {
+    if (error?.response?.status === 401) {
       localStorage.clear();
       router.push({ name: "login" });
     }
